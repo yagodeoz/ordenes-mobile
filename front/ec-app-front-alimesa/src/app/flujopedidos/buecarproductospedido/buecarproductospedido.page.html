@@ -1,0 +1,67 @@
+<ion-header class="osahan-nav">
+  <ion-toolbar>
+     <ion-title>Buscar Producto
+     </ion-title>
+      <ion-buttons  slot="primary">
+          <ion-button (click)="regresar()">
+              <ion-icon slot="icon-only" name="close" ></ion-icon>
+          </ion-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding order-list-page" color="light">
+   
+   
+   <ion-select style="font-size: medium; font-weight: bold" placeholder="TODAS LAS MARCAS" multiple="false" okText="Ok" cancelText="Cancelar"
+   (ionChange)="marcaSeleccionada($event)"
+   >
+
+<ion-select-option  *ngFor="let marca of listaCategoria" value={{marca.ID}} >
+{{marca.LTIPOPRODUCTO}}
+</ion-select-option >
+</ion-select>  
+
+    <ion-searchbar class="p-0 mb-2" #buscador placeholder="Buscar Nombre..." [animated]="true" (keyup.enter)="buscarSearch(buscador.value)"
+
+  ></ion-searchbar>
+
+    <ion-searchbar class="p-0 mb-2" #buscadorCodigo placeholder="Buscar Codigo..."
+                   [animated]="true" (keyup.enter)="buscarCodigo(buscadorCodigo.value)"
+
+    ></ion-searchbar>
+
+   <div *ngIf="listaProductos">
+  <div (click)="procesarProducto(item)"  class="d-flex p-3 shop-cart-item bg-white mb-2"
+   *ngFor=" let item of listaProductos "
+  >
+      
+  <div class="shop-cart-left">
+   <img alt="img" class="not-found-img" src="assets/productos/producto.png">
+</div>
+<div class="shop-cart-right">
+   <h6 class="font-weight-bold text-dark mb-2 price">{{item.PRECIOUNITARIO | currency}}
+      <span class="regular-price text-secondary font-weight-normal">{{item.PRECIOIVA | currency}}</span></h6>
+   <div class="mb-2 text-dark">{{item.NOMBRE}}
+   </div>
+   <div class="mb-2 text-dark">{{item.DESCRIPCION}}
+ </div>
+   <div class="small text-gray-500 d-flex align-items-center justify-content-between">
+      <small class="text-secondary">{{item.CODIGOPRODUCTO}}</small>
+      <div class="input-group shop-cart-value">
+         <span class="input-group-btn"><button disabled="disabled"  style="background: white" class="btn btn-sm" type="button"></button></span>
+         <input type="text" max="10" min="1" value="" class="form-control border-form-control form-control-sm input-number" name="quant[1]">
+         <span class="input-group-btn"><button class="btn btn-sm" type="button">+</button>
+         </span>
+      </div>
+   </div>
+</div>
+
+
+  </div>
+   </div>
+
+    <div *ngIf="error">
+        {{error}}
+    </div>
+
+</ion-content>

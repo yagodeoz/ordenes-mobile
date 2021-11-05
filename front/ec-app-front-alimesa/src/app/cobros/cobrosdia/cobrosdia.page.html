@@ -1,0 +1,56 @@
+<ion-header class="osahan-nav">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Lista de Cobros por dia
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding order-list-page" color="light">
+    
+    
+    <ion-searchbar class="p-0 mb-2" placeholder="Buscar cobros por Nombre..."  #buscadorCliente
+                 [animated]="true" (keyup.enter)="buscarCliente(buscadorCliente.value)"
+  ></ion-searchbar>
+
+
+    <div class="text-center mb-2"><small>Fecha: {{fechaHoy}} </small></div>
+    
+    <div class="card order-item-card mb-2" *ngFor=" let item of listaCobrosDia ">
+        <div class="d-flex align-items-center p-3">
+            <div class="overflow-hidden ml-2">
+                <h6 class="font-weight-bold text-dark mb-0 text-truncate">{{item.nombrecliente}}</h6>
+                <div class="text-truncate text-primary">Identificación: {{item.identificacion}}</div>
+                <div class="small text-secondary">
+                    <ion-icon name="logo-usd"></ion-icon>
+                    Número Pago : {{item.numeropago}}
+                </div>
+            </div>
+        </div>
+        <div class="d-flex align-items-center py-2 px-3 border-top border-bottom text-success">
+            {{getDescripcionEstado(item)}} - Canal Mobile
+            <ion-icon class="ml-auto" name="close-circle-outline"></ion-icon>
+        </div>
+        <div class="p-3">
+            <div class="d-flex justify-content-between mb-1">
+                <small class="text-secondary">Forma Pago</small>
+                <small class="text-secondary">{{item.idtipoformapago}}</small>
+            </div>
+            <div class="d-flex justify-content-between mb-1">
+                <small class="text-secondary">Monto Pago </small>
+                <small class="text-secondary">{{item.monto  | currency}}</small>
+            </div>            
+            <ion-grid style="padding: 0px !important;">
+                <ion-row style="padding: 0px !important;" >
+                  <ion-col >
+                    <ion-button class="button-block mb-0 mx-0"  color="danger"   >Comprobante</ion-button>
+                  </ion-col>
+                  <ion-col>
+                    <ion-button class="button-block mb-0 mx-0"  color="primary"  (click)='procesarCobro(item)' >Detalles</ion-button>
+                  </ion-col>    
+                </ion-row>
+            </ion-grid>    
+        </div>
+    </div>
+</ion-content>

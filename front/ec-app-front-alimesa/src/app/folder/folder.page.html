@@ -1,0 +1,54 @@
+<ion-header class="osahan-nav">
+  <ion-toolbar>
+     <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+     </ion-buttons>
+     <ion-title>
+        {{tituloApp}}<br><small>{{direccionApp}}</small>
+     </ion-title>
+  </ion-toolbar>
+  <ion-searchbar class="pt-1" placeholder="{{mensajeBusqueda}}" ></ion-searchbar>
+</ion-header>
+<ion-content color="light">
+  <div class="homepage-slider">
+     <ion-slides pager="true">
+        <ion-slide>
+           <img alt="img" class="single-img" src="assets/slider/slider1.jpg">
+        </ion-slide>
+        <ion-slide>
+           <img alt="img" class="single-img" src="assets/slider/slider2.jpg">
+        </ion-slide>
+        <ion-slide>
+           <img alt="img" class="single-img" src="assets/slider/slider3.jpg">
+        </ion-slide>
+        <ion-slide>
+           <img alt="img" class="single-img" src="assets/slider/slider4.jpg">
+        </ion-slide>
+        <ion-slide>
+           <img alt="img" class="single-img" src="assets/slider/slider5.jpg">
+        </ion-slide>
+     </ion-slides>
+  </div>
+  <div class="bg-primary pt-4">
+     <ion-grid>
+        <ion-row>
+           <ion-col>
+              <h5 class="mb-3 d-flex align-items-center" style="color: white">
+                 {{tituloCategorias}}
+                 <ion-button size="small" class="ios button button-small ml-auto" (click)='OpenUrl();' >{{botonMas}}</ion-button>
+              </h5>
+              <div  class="d-flex p-3 shop-cart-item bg-white mb-2">
+                    <img alt="img" class="not-found-img" src="assets/small/gama_exportacion.jpg">
+              </div>
+              <div  class="d-flex p-3 shop-cart-item bg-white mb-2">
+                 <img alt="img" class="not-found-img" src="assets/small/gama_premium.jpg">
+              </div>
+              <div  class="d-flex p-3 shop-cart-item bg-white mb-0">
+                 <img alt="img" class="not-found-img" src="assets/small/gama_tipica.jpg">
+              </div>
+           </ion-col>
+        </ion-row>
+     </ion-grid>
+  </div>
+
+</ion-content>

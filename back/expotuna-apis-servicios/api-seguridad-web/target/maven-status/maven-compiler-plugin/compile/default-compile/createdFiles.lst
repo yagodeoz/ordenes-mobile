@@ -1,0 +1,15 @@
+com\alimesa\ordenpedido\librerias\excepciones\ExcepcionParametrosQuerys.class
+com\alimesa\ordenpedido\librerias\excepciones\ExcepcionLogin.class
+com\alimesa\ordenpedido\librerias\generales\GestorQuerysJDBC.class
+com\alimesa\ordenpedido\loginmodule\servicios\jdbc\ServicioLoginModuleJDBC.class
+com\alimesa\ordenpedido\librerias\generales\UtilCryptography.class
+com\alimesa\ordenpedido\loginmodule\servicios\IServiciosLoginModule.class
+com\alimesa\ordenpedido\librerias\generales\UtilEncriptarDataSource.class
+com\alimesa\ordenpedido\librerias\excepciones\ExcepcionEliminacionNoPermitida.class
+com\alimesa\ordenpedido\librerias\excepciones\ExcepcionLocalizacionServicio.class
+com\alimesa\ordenpedido\librerias\excepciones\ExcepcionFalloTecnico.class
+com\alimesa\ordenpedido\librerias\generales\ClonadorObjetos.class
+com\alimesa\ordenpedido\librerias\excepciones\ExcepcionAplicacion.class
+com\alimesa\ordenpedido\librerias\excepciones\ExcepcionFiltroIncompleto.class
+com\alimesa\ordenpedido\librerias\excepciones\ExcepcionEncriptacion.class
+com\alimesa\ordenpedido\loginmodule\LoginModuleWildFly.class

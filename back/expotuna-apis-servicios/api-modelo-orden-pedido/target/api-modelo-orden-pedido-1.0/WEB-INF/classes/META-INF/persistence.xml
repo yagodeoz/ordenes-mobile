@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">	
+	<persistence-unit name="ORD_PEDIDO-PU" transaction-type="JTA">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<jta-data-source>java:/ORD_PEDIDO_DTSR</jta-data-source>
+<!--  		<class>com.onix.modulo.dominio.aplicacion.OmsBitacora</class>  -->
+<!--  		<class>com.onix.modulo.dominio.aplicacion.OmsOpcione</class>  -->
+<!--  		<class>com.onix.modulo.dominio.aplicacion.OmsOpcionesRole</class>  -->
+<!--  		<class>com.onix.modulo.dominio.aplicacion.OmsRole</class>  -->
+<!-- 		<class>com.onix.modulo.dominio.aplicacion.OmsUsuario</class> -->
+<!--  		<class>com.onix.modulo.dominio.aplicacion.OmsUsuariosRole</class> -->
+<!--  		<class>com.onix.modulo.dominio.empresa.OmseEmpresa</class>  -->
+<!--  		<class>com.onix.modulo.dominio.empresa.OmseSucursal</class>  -->
+<!--  		<class>com.onix.modulo.dominio.empresa.OmseSucursalPersona</class> -->
+<!--  		<class>com.onix.modulo.dominio.localizacion.OmslCanton</class>  -->
+<!--  		<class>com.onix.modulo.dominio.localizacion.OmslPais</class>  -->
+<!--  		<class>com.onix.modulo.dominio.localizacion.OmslProvincia</class> -->
+<!--  		<class>com.onix.modulo.dominio.persona.OmsgDireccionPersona</class>  -->
+<!--  		<class>com.onix.modulo.dominio.persona.OmsgPersona</class>  -->
+<!--  		<class>com.onix.modulo.dominio.persona.OmsgTelefonoPersona</class>  -->
+<!--  		<class>com.onix.modulo.dominio.persona.OmsgTipoDireccion</class>  -->
+<!--  		<class>com.onix.modulo.dominio.persona.OmsgTipoDocumentoIdentificacion</class>  -->
+<!--  		<class>com.onix.modulo.dominio.persona.OmsgTipoTelefono</class> -->
+<!--  		<class>com.onix.modulo.dominio.persona.operacion.OmsoCargo</class>  -->
+<!--  		<class>com.onix.modulo.dominio.persona.operacion.OmsoCliente</class>  -->
+<!--  		<class>com.onix.modulo.dominio.persona.operacion.OmsoEmpleado</class> -->
+<!--  		<class>com.onix.modulo.dominio.persona.operacion.OmsoEspecialidad</class>  -->
+<!--  		<class>com.onix.modulo.dominio.persona.operacion.OmsoProveedor</class> -->
+<!--  		<class>com.onix.modulo.dominio.persona.operacion.OmsoProveedor</class>  -->
+		<exclude-unlisted-classes>false</exclude-unlisted-classes>
+<!-- 		<jar-file>../../lib/onix-implementacion-modulo-servicios-7.0.jar</jar-file> -->
+<!-- 			<jar-file>onix-modulo-servicios.jar</jar-file> -->
+<!-- 		<jar-file>../onix-modulo-servicios-estetica.jar</jar-file> -->
+<!-- 		<jar-file>../onix-modulo-servicios-contable.jar</jar-file> -->
+<!-- 		<jar-file>../onix-modulo-servicios-monitoreopruebas.jar</jar-file> -->
+<!-- 		<jar-file>../onix-modulo-servicios-evaluacion.jar</jar-file> -->
+		<properties>
+			<property name="hibernate.archive.autodetection" value="class, hbm" />
+			<property name="hibernate.jdbc.batch_size" value="0" />
+			<property name="hibernate.format_sql" value="true" />
+			<property name="hibernate.show_sql" value="true" />
+ 			<property name="hibernate.hbm2ddl.auto" value="update" />  
+		</properties>  
+	</persistence-unit>
+</persistence>   

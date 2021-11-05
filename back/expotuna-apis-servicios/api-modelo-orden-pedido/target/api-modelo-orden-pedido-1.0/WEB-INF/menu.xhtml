@@ -1,0 +1,234 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<style>
+.ui-fileupload-filename {
+	display: none !important;
+}
+</style>
+
+	<div class="menu-wrapper">
+		<div class="layout-menu-container">
+			<h:form id="menuform">
+				<div class="layout-profile">
+					<a class="layout-profile-button" href="#"> <span
+						class="profile-image-icons"> <p:outputPanel id="foto1">
+								<p:graphicImage name="images/menu/avatar.png"
+									library="pandora-layout"
+									rendered="#{beanLogin.usuarioSession.usuarioSession.imagenReferencia == null}"
+									style="outline: aliceblue; width: 50px; height: 50px; vertical-align: top; border-radius: 50%;" />
+
+								<o:graphicImage
+									rendered="#{beanLogin.usuarioSession.usuarioSession.imagenReferencia != null}"
+									style="outline: aliceblue; width: 50px; height: 50px; vertical-align: top; border-radius: 50%;"
+									value="#{beanLogin.usuarioSession.usuarioSession.imagenReferencia}"
+									dataURI="true" />
+							</p:outputPanel>
+					</span> <span class="profile-info-button"> <span
+							class="layout-profile-userinfo"> <span
+								class="layout-profile-name">#{beanLogin.usuarioSession.usuarioSession.lDescripcion}</span>
+								<span class="layout-profile-role">#{beanLogin.usuarioSession.usuarioSession.rolesAsignados}</span>
+						</span> <i class="layout-profile-icon pi pi-angle-down" />
+					</span>
+					</a>
+
+					<ul class="layout-profile-menu">
+						<li class="info">
+							<div class="profile-info">
+								<div class="layout-profile-userinfo">
+									<span class="layout-profile-name">#{beanLogin.usuarioSession.usuarioSession.lDescripcion}</span>
+									<span class="layout-profile-role">#{beanLogin.usuarioSession.usuarioSession.rolesAsignados}</span>
+								</div>
+							</div>
+						</li>
+						<li><p:commandLink title="Mi Perfil"
+								update=" @([id$=dialogoMantenimientoPerfil])"
+								actionListener="#{beanMantenedorUsuario.actualizarUsuario}"
+								oncomplete="PF('dialogoMantenimientoPerfil').show();"
+								process="@this">
+								<i class="pi pi-fw pi-user" />
+								<span>Perfil</span>
+
+								<f:attribute
+									name="#{beanMantenedorUsuario.nombreAtributoCambioEstado}"
+									value="#{beanLogin.usuarioSession.usuarioSession}"></f:attribute>
+
+							</p:commandLink></li>
+						<li><a href="#" onclick="PF('dlg3').show();"
+							title="Selección sucursal"> <i class="pi pi-fw pi-cog" /> <span>Selecciona
+									Sucursal</span>
+						</a></li>
+						<li><a href="#" onclick="PF('dlg2').show();"
+							title="Cambio Clave"> <i class="pi pi-fw pi-key" /> <span>Cambio
+									Contraseña</span>
+						</a></li>
+						<li><p:commandLink action="#{beanLogin.logout}" title="Salir">
+								<i class="pi pi-fw pi-power-off" />
+								<span>Cerrar Sesion</span>
+							</p:commandLink></li>
+					</ul>
+				</div>
+				<ui:include
+					src="#{guestPreferences.groupedMenu ? 'groupedMenu.xhtml' : 'ungroupedMenu.xhtml'}" />
+			</h:form>
+		</div>
+	</div>
+
+	<h:form>
+		<p:dialog header="Cambio de clave" widgetVar="dlg2" modal="true"
+			closable="false" responsive="true" width="300px"
+			visible="#{beanLogin.usuarioSession.usuarioSession.esNuevo eq 'S'}">
+			<p:outputPanel id="cambClae">
+				<p:messages globalOnly="false" showDetail="false" closable="true"
+					id="mensajeGeneral"></p:messages>
+
+				<div class="p-grid ui-fluid">
+					<div class="p-col-12 p-lg-4">
+						<h:outputText value="Usuario: " />
+					</div>
+					<div class="p-col-12 p-lg-8">
+						<p:inputText
+							value="#{beanLogin.usuarioSession.usuarioSession.usuario}"
+							readonly="true"></p:inputText>
+					</div>
+					<div class="p-col-12 p-lg-4">
+						<h:outputText value="Clave: " />
+					</div>
+					<div class="p-col-12 p-lg-8">
+						<p:password feedback="false" value="#{beanLogin.cambContrase1}"></p:password>
+					</div>
+					<div class="p-col-12 p-lg-4">
+						<h:outputText value="Rep. Clave: " />
+					</div>
+					<div class="p-col-12 p-lg-8">
+						<p:password feedback="false" value="#{beanLogin.cambContrase2}"></p:password>
+					</div>
+					<div class="p-col-12">
+						<p:commandButton value="Aceptar"
+							actionListener="#{beanLogin.cambiarContrasenia}"
+							process="@([id$=cambClae])" update="@([id$=cambClae])"
+							partialSubmit="true">
+
+						</p:commandButton>
+					</div>
+					<div class="p-col-12">
+						<p:commandButton value="Cerrar"
+							actionListener="#{beanLogin.cerrarVentana}" ajax="false">
+						</p:commandButton>
+					</div>
+				</div>
+			</p:outputPanel>
+
+		</p:dialog>
+
+	</h:form>
+
+	<h:form>
+		<p:dialog widgetVar="dialogoMantenimientoPerfil"
+			id="dialogoMantenimientoPerfil" width="400px" responsive="true"
+			header="Actualización Perfil">
+			<p:messages globalOnly="false" id="mensajeProfile"></p:messages>
+			<div class="p-grid ui-fluid">
+				<div class="p-col-12" align="center">
+					<p:graphicImage
+						rendered="#{beanLogin.usuarioSession.usuarioSession.imagenReferencia == null}"
+						name="images/menu/avatar.png" library="pandora-layout" value="#"
+						style="outline: aliceblue; width: 100px; height: 100px; vertical-align: top; border-radius: 10%;" />
+
+					<o:graphicImage id="idAvatarDLG"
+						style="outline: aliceblue; width: 150px; height: 150px; vertical-align: top; border-radius: 10%;"
+						value="#{beanMantenedorUsuario.usuarioActual.imagenReferencia}"
+						rendered="#{beanMantenedorUsuario.usuarioActual.imagenReferencia != null}"
+						dataURI="true" />
+				</div>
+
+				<div class="p-col-12 p-lg-4">
+					<p:outputLabel value="Usuario:" />
+				</div>
+				<div class="p-col-12 p-lg-8">
+					<p:inputText placeholder="Usuario"
+						value="#{beanMantenedorUsuario.usuarioActual.usuario}"
+						id="Usuario" readonly="true" />
+				</div>
+
+				<div class="p-col-12 p-lg-4">
+					<p:outputLabel value="Descripción:" />
+				</div>
+				<div class="p-col-12 p-lg-8">
+					<p:inputText placeholder="Descripción"
+						value="#{beanMantenedorUsuario.usuarioActual.lDescripcion}"
+						onblur="ChangeCase(this);" required="true" id="Descripción" />
+				</div>
+
+				<div class="p-col-12 p-lg-12">
+					<p:inputText placeholder="Email"
+						value="#{beanMantenedorUsuario.usuarioActual.correo}"
+						required="true" validatorMessage="Email incorrecto" id="Email">
+						<f:validateRegex
+							pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"></f:validateRegex>
+					</p:inputText>
+				</div>
+
+				<div class="p-col-12 p-md-12">
+					<p:fileUpload listener="#{beanMantenedorUsuario.subir}"
+						mode="advanced" dragDropSupport="true" update="@this"
+						process="@this" sizeLimit="1000000" fileLimit="1"
+						allowTypes="/(\.|\/)(gif|jpe?g|png)$/" cancelLabel="Limpiar"
+						uploadLabel="Subir" invalidFileMessage="Archivo no permitido"
+						invalidSizeMessage="El tamaño no es permitido" required="false"
+						label="Buscar" />
+				</div>
+
+				<div class="p-col-12">
+
+					<p:commandButton value="Actualizar" styleClass="CyanButton"
+						actionListener="#{beanMantenedorUsuario.guardarOActualizar}"
+						process="@form" update="@([id$=foto1])"
+						oncomplete="PF('dialogoMantenimientoPerfil').hide();">
+					</p:commandButton>
+
+				</div>
+
+			</div>
+
+
+		</p:dialog>
+	</h:form>
+
+
+	<h:form>
+		<p:dialog header="Seleccione la sucursal" widgetVar="dlg3"
+			modal="false" closable="true" responsive="true" width="300px"
+			visible="#{empty beanLogin.usuarioSession.usuarioSession.lEsAdmin  || !beanLogin.usuarioSession.usuarioSession.lEsAdmin eq 'S'}"
+			
+			>
+
+			<p:dataTable id="tblSucursal" var="sucursal" 
+				value="#{beanSucursalesSeleccionadas.listaSucursales}"
+				selection="#{beanSucursalesSeleccionadas.listaSucursalesSeleccionadas}"
+				rowKey="#{sucursal.id}" style="margin-bottom:0"  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false"
+				rows="5" selectionPageOnly="false"
+				emptyMessage="No existe sucursales registradas para el usuario"
+				>
+				<p:column selectionMode="multiple"
+					style="width:16px;text-align:center" />
+				<p:column headerText="Nombre">
+					<h:outputText value="#{sucursal.nombre}" />
+				</p:column>
+
+				<p:column headerText="Código">
+					<h:outputText value="#{sucursal.codigo}" />
+				</p:column>
+
+			</p:dataTable>
+		</p:dialog>
+
+	</h:form>
+
+
+
+
+</ui:composition>

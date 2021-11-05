@@ -1,0 +1,185 @@
+<ion-header class="osahan-nav">
+  <ion-toolbar>
+     <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+     </ion-buttons>
+     <ion-title>Cobro Banco
+     </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding my-profile-page" color="light">
+
+   <div class="mb-2 card bg-white profile-box text-center">
+      <a class="list-group-item list-group-item-action active text-left">
+         <ion-icon class="mr-2" name="person-outline"></ion-icon>
+         Datos Cliente
+      </a>
+      <div class="py-4 px-3 border-bottom datos-cliente" >
+         <p class="font-weight-bold text-dark mb-1 datos-cliente">{{item.NOMBRECOMPLETO}}</p>
+         <p class="mb-0 text-muted">Registro Fiscal: {{item.IDENTIFICACION}}</p>      
+     </div>
+  </div>
+   <form >
+   <div class="mb-2 card bg-white profile-box">
+      <a class="list-group-item list-group-item-action active text-left">
+         <ion-icon class="mr-2" name="clipboard"></ion-icon>
+         Datos Cobro
+      </a>
+      <div class="py-4 px-3 border-bottom datos-cliente" >
+
+         <ion-row>
+            <ion-col>
+               <ion-item>
+                  <ion-label position="stacked">
+                     No. Pago
+                     <ion-text color="danger">*</ion-text>
+                  </ion-label>
+                  <ion-input  value= "{{compPago.numeropago}}" disabled type="text" style="font-size: medium"></ion-input>
+               </ion-item>
+            </ion-col>
+            <ion-col>
+               <ion-item >
+                  <ion-label position="stacked">
+                     Compro                     
+                  </ion-label>
+                  <ion-input placeholder="Comprobante"  [(ngModel)]='compPago.comprobante' required type="text" style="font-size: xx-small"
+                  name = "comprobante"
+                  ></ion-input>
+               </ion-item>
+            </ion-col>
+         </ion-row>
+
+          <ion-item style="margin-top: 0">
+              <ion-label position="stacked">
+                  Banco
+                  <ion-text color="danger">*</ion-text>
+              </ion-label>
+              <ion-select style="font-size: medium; font-weight: bold" placeholder="Seleccione" multiple="false" okText="Ok" cancelText="Cancelar"
+              (ionChange)="bancoSeleccionado($event)"    
+              >
+                  <ion-select-option  *ngFor="let banco of listaBanco" value='{"idbanco": {{banco.id}}, "codigobanco" : "{{banco.codigobanco}}" , "nombrebanco": "{{banco.nombrebanco}}"}' >
+                     {{banco.nombrebanco}}
+               </ion-select-option >
+            </ion-select>  
+          </ion-item>
+
+          <ion-row>
+              <ion-col>
+                  <ion-item>
+                      <ion-label position="stacked">
+                          Cuenta
+                          <ion-text color="danger">*</ion-text>
+                      </ion-label>
+                      <ion-input placeholder="Cuenta"  [(ngModel)]='compPago.cuenta' required type="text" style="font-size: xx-small"
+                                    name = "cuenta"
+                  ></ion-input>
+                  </ion-item>
+              </ion-col>
+              <ion-col>
+                  <ion-item >
+                      <ion-label position="stacked">
+                          Cheque
+                          <ion-text color="danger">*</ion-text>
+                      </ion-label>
+                      <ion-input placeholder="No. Cheque"  [(ngModel)]='compPago.cheque' required type="text" style="font-size: xx-small"
+                                    name = "cheque"
+                  ></ion-input>
+                  </ion-item>
+              </ion-col>
+          </ion-row>
+
+          <ion-row>
+              <ion-col>
+                  <ion-item>
+                      <ion-label position="stacked">
+                          F. Venc.
+                          <ion-text color="danger">*</ion-text>
+                      </ion-label>
+                      <ion-datetime [(ngModel)]="compPago.fechavencimiento" name="fechaEmision" required style="font-size: medium; height: 2.5em !important;" displayFormat="DD/MM/YYYY" 
+                      [max]="fechamaxima"
+                      [min]="fechaminima"
+                      >
+                    </ion-datetime> 
+                  </ion-item>
+              </ion-col>
+              <ion-col>
+                  <ion-item >
+                      <ion-label position="stacked">
+                          Valor Chq.
+                          <ion-text color="danger">*</ion-text>
+                      </ion-label>
+                      <ion-input required style="font-size: medium"
+                            [(ngModel)]='compPago.valorcheque' 
+                             name="valorCheque"
+                             type="number" 
+                             inputmode="decimal"
+                         ></ion-input>  
+                  </ion-item>
+              </ion-col>
+          </ion-row>
+
+         <ion-row>
+            <ion-col >
+               <ion-item>
+                  <ion-label position="stacked">
+                     Valor
+                     <ion-text color="danger">*</ion-text>
+                  </ion-label>
+                  <ion-input  value= "{{compPago.monto  | currency}}" disabled type="text" style="font-size: medium"></ion-input>
+               </ion-item>
+            </ion-col>
+         </ion-row>
+      </div>
+   </div>
+
+      <div class="mb-2 card bg-white profile-box">
+         <a class="list-group-item list-group-item-action active text-left"
+         >
+            <ion-icon class="mr-2" name="cash"></ion-icon>
+            Documentos a Cancelar
+         </a>
+         <div class="py-4 px-3 border-bottom datos-cliente"  >
+
+            <ion-list>
+                <ion-item *ngFor=" let regPago of listaRegistroPago "> 
+                    <div class="shop-cart-right">  
+                       <h4 class="font-weight-bold mb-2 price">[FACT] - {{regPago.cobro.numerofactura}}   </h4>
+                        <p class="mb-0 text-white font-weight-bold" >Saldo: {{regPago.cobro.saldo | currency}}</p>
+                        <p class="mb-0 text-danger font-weight-bold" >Pagos: {{regPago.cobro.pagosrealizados | currency}}</p>
+                        <p class="mb-0 text-white " >Documento: {{regPago.cobro.numerodocumento}} Monto: {{regPago.cobro.monto  | currency}}</p>
+                        <p class="mb-0 text-white " >Emisión: {{regPago.cobro.fechaemision}}</p>
+                        <p class="mb-0 text-white " >Vencimiento: {{regPago.cobro.fechavencimiento}}</p>
+                        <p class="mb-0 text-white " >Días Vencido: {{regPago.cobro.diasvencido}} Res. Cheque: {{regPago.cobro.redcheque | currency}}</p>
+                    </div>
+                     <ion-label position="stacked" *ngIf="regPago.cobrar">
+                         Valor a Cancelar
+                             <ion-text color="danger">*</ion-text>
+                         </ion-label>
+                         <ion-input required style="font-size: medium" *ngIf="regPago.cobrar"
+                         [(ngModel)]='regPago.valor' id="{{regPago.cobro.numerofactura}}"
+                             name="{{regPago.cobro.numerofactura}}"
+                             type="number" 
+                             inputmode="decimal"
+                             (ionChange)='calcularDatos($event.target)'
+                         ></ion-input>  
+                 </ion-item>
+
+            </ion-list>
+
+         </div>
+      </div>
+   </form>
+</ion-content>
+
+<ion-footer class="border-0">
+    <button (click)='registrarPago()' class="btn btn-primary btn-lg fix-btn btn-block text-left" type="button">
+       <span class="float-left">
+          <ion-icon name="logo-usd"></ion-icon>
+          Registrar Pago
+       </span>
+       <span class="float-right">
+          <strong>{{compPago.monto  | currency}}</strong>
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+       </span>
+    </button>
+ </ion-footer>

@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<div class="layout-rightpanel">
+		<div class="rightpanel-wrapper">
+			<div class="rightpanel-header">
+				<div class="cover">
+					<p:graphicImage name="images/rightpanel/asset-cover.jpg"
+						styleClass="cover-image" library="pandora-layout" />
+					<p:graphicImage name="images/menu/avatar.png"
+						library="pandora-layout"
+						rendered="#{beanLogin.usuarioSession.usuarioSession.imagenReferencia == null}"
+						style="outline: aliceblue; width: 50px; height: 50px; vertical-align: top; border-radius: 50%;" />
+
+					<o:graphicImage
+						rendered="#{beanLogin.usuarioSession.usuarioSession.imagenReferencia != null}"
+						style="outline: aliceblue; width: 50px; height: 50px; vertical-align: top; border-radius: 50%;"
+						value="#{beanLogin.usuarioSession.usuarioSession.imagenReferencia}"
+						dataURI="true" />
+				</div>
+				<div class="profile-info">
+					<h4>#{beanLogin.usuarioSession.usuarioSession.lDescripcion}</h4>
+					<span>#{beanLogin.usuarioSession.usuarioSession.rolesAsignados}</span>
+					<span class="status">#{beanLogin.usuarioSession.usuarioSession.correo}</span>
+				</div>
+			</div>
+
+			<div class="rightpanel-summary">
+				<h4>Detalles Perfil:</h4>
+				<div class="numbers-row">
+					<div class="number">
+						<h5>Nombres</h5>
+						<span>#{beanLogin.usuarioSession.usuarioSession.lNombres}</span>
+					</div>
+				</div>
+				<div class="numbers-row">
+					<div class="number">
+						<h5>Apellidos</h5>
+						<span>#{beanLogin.usuarioSession.usuarioSession.lApellidos}</span>
+					</div>
+				</div>
+			</div>
+			<div class="rightpanel-summary">
+				<div class="card">
+                    <p:barChart model="#{beanGraficoOrdenes.reporteSemanalVentas}" style="width: 100%; height: 300px;"/>
+                </div>
+            </div>
+		</div>
+	</div>
+
+</ui:composition>

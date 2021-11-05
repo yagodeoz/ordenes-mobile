@@ -1,0 +1,264 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template_formulario_mantenimiento.xhtml">
+
+
+	<ui:define name="TITULO_FORMULARIO">#{beanMantenedorRol.tituloPagina}</ui:define>
+
+	<ui:define name="CUERPO_FORMULARIO">
+
+		<div class="p-col-12 p-md-6">
+		<h:outputText value="Nombre Rol "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputText placeholder="Nombre Rol"
+				value="#{beanMantenedorRol.entidadRegistrar.rol}"
+				onblur="ChangeCase(this);" required="true" id="Rol"
+				requiredMessage="Debe ingresar el rol">
+				<f:ajax event="blur" execute="@this" render="mensajes"></f:ajax>
+			</p:inputText>
+		</div>
+		<div class="p-col-12 p-md-6">
+		<h:outputText value="Descripción "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputText placeholder="Descripción"
+				value="#{beanMantenedorRol.entidadRegistrar.observacion}"
+				onblur="ChangeCase(this);" required="true" id="Descripción"
+				requiredMessage="Debe ingresar la descripción">
+				<f:ajax event="blur" execute="@this" render="mensajes"></f:ajax>
+			</p:inputText>
+		</div>
+
+		<div class="p-col-12 p-md-6">
+		<h:outputText value="Seleccionable "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:selectOneMenu id="Seleccionable"
+				value="#{beanMantenedorRol.entidadRegistrar.seleccionable}"
+				required="true" label="Seleccionable">
+				<f:selectItem itemLabel="Rol Seleccionable" itemValue=""
+					noSelectionOption="true" />
+				<f:selectItem itemLabel="SI" itemValue="S" />
+				<f:selectItem itemLabel="NO" itemValue="N" />
+			</p:selectOneMenu>
+		</div>
+
+		<div class="p-col-12 p-md-6">
+			<h:outputText value="Opciones "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:selectCheckboxMenu id="Opciones"
+				value="#{beanMantenedorRol.opcionesSeleccionadas}"
+				label="Permiso Opciones" filter="true" filterMatchMode="startsWith"
+				required="true">
+				<f:selectItems value="#{beanMantenedorRol.listaOpcionesTerminales}"
+					var="opcion" itemLabel="#{opcion.descripcion}"
+					itemValue="#{opcion.id}" />
+			</p:selectCheckboxMenu>
+		</div>
+
+	</ui:define>
+
+	<ui:define name="CONTROL_FORMULARIO">
+		<p:commandButton value="Registrar" style="margin-bottom:10px;"
+			id="registrar" styleClass="ui-button-rounded"
+			actionListener="#{beanMantenedorRol.guardarOActualizar}"
+			process="contenedor" update="@form" partialSubmit="true" />
+
+	</ui:define>
+
+	<ui:define name="TITULO_TABLA">#{beanMantenedorRol.cabeceraTabla}</ui:define>
+
+	<ui:define name="CUERPO_TABLA">
+		<p:dataTable value="#{beanMantenedorRol.listaEntidades}" var="rol"
+			emptyMessage="#{beanMantenedorRol.mensajeTablaVacia}" rows="8"
+			reflow="true" paginator="true" paginatorPosition="bottom"
+			id="tablaDatos" widgetVar="tablaDatos" paginatorAlwaysVisible="false">
+
+			<p:column filterBy="#{rol.rol}" footerText="Nombre Rol">
+				<h:outputText value="#{rol.rol}" />
+			</p:column>
+
+			<p:column headerText="Descripción">
+				<h:outputText value="#{rol.observacion}" />
+			</p:column>
+
+			<p:column footerText="Estado" filterBy="#{usuario.estado}"
+				filterMatchMode="exact">
+				<f:facet name="filter">
+					<p:selectOneMenu onchange="PF('tablaDatos').filter()">
+						<f:selectItem itemLabel="ESTADO" itemValue="#{null}"
+							noSelectionOption="true" />
+						<f:selectItem itemLabel="ACTIVO" itemValue="A" />
+						<f:selectItem itemLabel="INACTIVO" itemValue="I" />
+					</p:selectOneMenu>
+				</f:facet>
+
+				<h:outputText
+					value="#{rol.estado eq beanMantenedorRol.estadoActivo?'ACTIVO':'INACTIVO'}" />
+			</p:column>
+
+
+			<p:column footerText="Tipo Rol" filterBy="#{rol.seleccionable}"
+				filterMatchMode="exact">
+				<f:facet name="filter">
+					<p:selectOneMenu onchange="PF('tablaDatos').filter()">
+						<f:selectItem itemLabel="SELEC" itemValue="#{null}"
+							noSelectionOption="true" />
+						<f:selectItem itemLabel="SI" itemValue="S" />
+						<f:selectItem itemLabel="NO" itemValue="N" />
+					</p:selectOneMenu>
+				</f:facet>
+
+				<h:outputText value="#{rol.seleccionable eq 'S'?'SI':'NO'}" />
+			</p:column>
+
+			<p:column headerText="Fecha Registro">
+				<h:outputText value="#{rol.fechaRegistro}">
+					<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+						timeZone="#{beanMantenedorRol.currentTimeZone}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Acciones">
+				<div class="p-grid ui-fluid">
+					<div class="p-col-12 p-md-4">
+						<p:commandLink title="Cambiar Estado"  rendered="#{rol.seleccionable eq 'S'}"
+							actionListener="#{beanMantenedorRol.cambiarEstado}"
+							update="@form" process="@this">
+
+							<i class="fa fa-exchange Fs20 BoldGray DispBlock"> </i>
+							<f:attribute
+								name="#{beanMantenedorRol.nombreAtributoCambioEstado}"
+								value="#{rol}"></f:attribute>
+
+							<p:confirm header="Confirmación"
+								message="Seguro que desea realizar esta operación?"
+								icon="ui-icon-alert" />
+						</p:commandLink>
+					</div>
+					<div class="p-col-12 p-md-4">
+						<p:commandLink id="opcionesAsignadas"
+							title="Ver las opciones asignados"
+							oncomplete="PF('dialogoMantenimientoOpcionesRoles').show();"
+							actionListener="#{beanMantenedorRol.seleccionarEntidad}"
+							update="@([id$=dialogoMantenimientoOpcionesRoles])"
+							process="@this">
+
+							<i class="fa fa-server Fs20 BoldGray DispBlock"> </i>
+							<f:attribute
+								name="#{beanMantenedorRol.nombreAtributoCambioEstado}"
+								value="#{rol}"></f:attribute>
+						</p:commandLink>
+					</div>
+					<div class="p-col-12 p-md-4">
+						<p:commandLink title="Actualizar" rendered="#{rol.seleccionable eq 'S'}"
+							actionListener="#{beanMantenedorRol.actualizarEntidad}"
+							update="@([id$=dialogoMantenimiento])"
+							oncomplete="PF('dialogoMantenimiento').show();" process="@this">
+							<i class="fa fa-edit Fs20 BoldGray DispBlock"> </i>
+							<f:attribute
+								name="#{beanMantenedorRol.nombreAtributoCambioEstado}"
+								value="#{rol}"></f:attribute>
+						</p:commandLink>
+					</div>
+				</div>
+
+			</p:column>
+		</p:dataTable>
+
+	</ui:define>
+
+	<ui:define name="form_comp_visual">
+
+		<p:dialog widgetVar="dialogoMantenimientoOpcionesRoles" modal="true"
+			minWidth="1024" height="300" id="dialogoMantenimientoOpcionesRoles"
+			width="55%"
+			header="Opciones asignadas para el rol : #{beanMantenedorRol.entidadRegistrar.rol}"
+			showHeader="true">
+			<p:outputPanel id="panelSeleccionOpciones">
+				<p:pickList id="listaOpciones"
+					value="#{beanMantenedorRol.listaSeleccionOpcion}" var="opcion"
+					effect="bounce" itemValue="#{opcion}" itemLabel="#{opcion}"
+					showCheckbox="true" responsive="true" showSourceFilter="true"
+					showTargetFilter="true" filterMatchMode="contains">
+
+					<f:facet name="sourceCaption">Opciones por asignar</f:facet>
+					<f:facet name="targetCaption">Opciones Asignadas</f:facet>
+					<p:ajax event="transfer"
+						listener="#{beanMantenedorRol.controlTransferencia}"
+						update="panelSeleccionOpciones" />
+
+					<p:column style="width:90%;">
+						<h:outputText value="#{opcion}" />
+					</p:column>
+				</p:pickList>
+			</p:outputPanel>
+		</p:dialog>
+
+	</ui:define>
+
+	<ui:define name="cab_dialogo">
+		#{beanMantenedorRol.cabeceraDialogo}
+	</ui:define>
+
+	<ui:define name="datos_dialogo">
+
+		<div class="p-col-12 p-md-2">
+			<h:outputText value="Nombre Rol *: " />
+		</div>
+
+		<div class="p-col-12 p-md-4">
+			<p:inputText placeholder="Nombre Rol"
+				value="#{beanMantenedorRol.entidadRegistrar.rol}"
+				onblur="ChangeCase(this);" required="true" id="RolDlg"
+				requiredMessage="Debe ingresar el rol">
+				<f:ajax event="blur" execute="@this" render="mensajeDialogo"></f:ajax>
+			</p:inputText>
+		</div>
+		<div class="p-col-12 p-md-2">
+			<h:outputText value="Descripción *: " />
+		</div>
+
+		<div class="p-col-12 p-md-4">
+			<p:inputText placeholder="Descripción"
+				value="#{beanMantenedorRol.entidadRegistrar.observacion}"
+				onblur="ChangeCase(this);" required="true" id="DescripcionDlg"
+				requiredMessage="Debe ingresar la descripción">
+				<f:ajax event="blur" execute="@this" render="mensajeDialogo"></f:ajax>
+			</p:inputText>
+		</div>
+
+		<div class="p-col-12 p-md-2">
+			<h:outputText value="Rol Seleccionable *: " />
+		</div>
+
+		<div class="p-col-12 p-md-4">
+			<p:selectOneMenu id="Seleccionable"
+				value="#{beanMantenedorRol.entidadRegistrar.seleccionable}"
+				required="true" label="Seleccionable">
+				<f:selectItem itemLabel="Rol Seleccionable" itemValue=""
+					noSelectionOption="true" />
+				<f:selectItem itemLabel="SI" itemValue="S" />
+				<f:selectItem itemLabel="NO" itemValue="N" />
+			</p:selectOneMenu>
+		</div>
+
+	</ui:define>
+
+	<ui:define name="control_formulario_dialogo">
+		<p:commandButton value="Actualizar" style="margin-bottom:10px;"
+			id="actualizar" styleClass="ui-button-rounded"
+			actionListener="#{beanMantenedorRol.guardarOActualizar}"
+			process="PanelActualizar"
+			update="@([id$=mensajes]), PanelActualizar, @([id$=tablaDatos])"
+			oncomplete="PF('dialogoMantenimiento').hide();" partialSubmit="true" />
+	</ui:define>
+
+	<ui:define name="control_dialogo">
+		<p:ajax event="close" update="PanelActualizar"
+			listener="#{beanMantenedorRol.eventoControlCierreDialogo}" />
+	</ui:define>
+
+
+</ui:composition>

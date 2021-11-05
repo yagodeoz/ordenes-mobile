@@ -1,0 +1,126 @@
+<ion-header class="osahan-nav">
+  <ion-toolbar>
+     <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+     </ion-buttons>
+     <ion-title>Detalles De Cobro
+     </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding my-profile-page" color="light">
+
+   <div class="mb-2 card bg-white profile-box text-center">
+      <a class="list-group-item list-group-item-action active text-left">
+         <ion-icon class="mr-2" name="person-outline"></ion-icon>
+         Datos Cliente
+      </a>
+      <div class="py-4 px-3 border-bottom datos-cliente" >
+         <p class="font-weight-bold text-dark mb-1 datos-cliente">{{comprobante.nombrecliente}}</p>
+         <p class="mb-0 text-muted">Registro Fiscal: {{comprobante.identificacion}}</p>      
+     </div>
+  </div>
+   <form >
+   <div class="mb-2 card bg-white profile-box">
+      <a class="list-group-item list-group-item-action active text-left">
+         <ion-icon class="mr-2" name="clipboard"></ion-icon>
+         Datos Cobro
+      </a>
+      <div class="py-4 px-3 border-bottom datos-cliente" >
+
+         <ion-row>
+            <ion-col>
+               <ion-item>
+                  <ion-label position="stacked">
+                     No. Pago                     
+                  </ion-label>
+                  <ion-input  value= "{{comprobante.numeropago}}" disabled type="text" style="font-size: medium"></ion-input>
+               </ion-item>
+            </ion-col>
+            <ion-col>
+               <ion-item >
+                  <ion-label position="stacked">
+                     Compro                     
+                  </ion-label>
+                  <ion-input  value='{{comprobante.comprobante}}' disabled type="text" style="font-size: medium"></ion-input>
+               </ion-item>
+            </ion-col>
+         </ion-row>
+
+          <ion-item style="margin-top: 0" *ngIf="comprobante.idtipoformapago === 'CHEQUE'">
+              <ion-label position="stacked">
+                  Banco                  
+              </ion-label>
+              <ion-input  value='{{comprobante.banco}}' disabled type="text" style="font-size: medium"></ion-input>
+          </ion-item>
+   
+          <ion-row *ngIf="comprobante.idtipoformapago === 'CHEQUE'">
+              <ion-col>
+                  <ion-item>
+                      <ion-label position="stacked" >
+                          Cuenta                          
+                      </ion-label>                      
+                  <ion-input  value='{{comprobante.cuenta}}' disabled type="text" style="font-size: medium"></ion-input>
+                  </ion-item>
+              </ion-col>
+              <ion-col>
+                  <ion-item >
+                      <ion-label position="stacked">
+                          Cheque                          
+                      </ion-label>                      
+                  <ion-input  value='{{comprobante.cheque}}' disabled type="text" style="font-size: medium"></ion-input>
+                  </ion-item>
+              </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="comprobante.idtipoformapago === 'CHEQUE'">
+              <ion-col>
+                  <ion-item>
+                      <ion-label position="stacked">
+                          F. Venc.                         
+                      </ion-label>                      
+                    <ion-input  value='{{comprobante.fechavencimiento}}' disabled type="text" style="font-size: medium"></ion-input>
+                  </ion-item>
+              </ion-col>
+              <ion-col>
+                  <ion-item >
+                      <ion-label position="stacked">
+                          Valor Cheque.                          
+                      </ion-label>
+                         <ion-input  value= "{{comprobante.valorcheque  | currency}}" disabled type="text" style="font-size: medium"></ion-input>
+                  </ion-item>
+              </ion-col>
+          </ion-row>
+         <ion-row>
+            <ion-col >
+               <ion-item>
+                  <ion-label position="stacked">
+                     Valor                     
+                  </ion-label>
+                  <ion-input  value= "{{comprobante.monto  | currency}}" disabled type="text" style="font-size: medium"></ion-input>
+               </ion-item>
+            </ion-col>
+         </ion-row>
+      </div>
+   </div>
+
+      <div class="mb-2 card bg-white profile-box">
+         <a class="list-group-item list-group-item-action active text-left">
+            <ion-icon class="mr-2" name="cash"></ion-icon>
+           Detalle Pagos
+         </a>
+         <div class="py-4 px-3 border-bottom datos-cliente"  >
+
+            <ion-list>
+                <ion-item *ngFor=" let regPago of listaCobros "> 
+                    <div class="shop-cart-right">  
+                       <h4 class="font-weight-bold mb-2 price">[FACT] - {{regPago.numerofactura}}   </h4>
+                        <p class="mb-0 text-white font-weight-bold" >Valor Recaudado: {{regPago.valorpago | currency}}</p>
+                        <p class="mb-0 text-white " >Documento: {{regPago.numerodocumento}}</p>
+                        <p class="mb-0 text-white " >Registro: {{regPago.fecha_registro}}</p>                        
+                    </div>                       
+                 </ion-item>
+            </ion-list>
+         </div>
+      </div>
+   </form>
+</ion-content>

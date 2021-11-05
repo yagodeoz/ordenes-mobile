@@ -1,0 +1,156 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template_consulta.xhtml"
+	xmlns:o="http://omnifaces.org/ui">
+
+
+
+	<ui:define name="TOOLBAR">
+		<p:toolbar styleClass="p-mb-4">
+			<p:toolbarGroup name="right">
+				<p:commandButton value="Sincronizar" icon="pi pi-download"
+					styleClass="ui-button-success" ajax="false">
+					<p:dataExporter type="pdf" target="dt-products" fileName="products" />
+				</p:commandButton>
+
+				<p:commandButton value="Export" icon="pi pi-upload"
+					styleClass="ui-button-help" ajax="false">
+					<p:dataExporter type="pdf" target="dt-products" fileName="products" />
+				</p:commandButton>
+			</p:toolbarGroup>
+		</p:toolbar>
+
+	</ui:define>
+
+	<ui:define name="TABLA">
+
+		<p:dataTable id="dt-products" widgetVar="dtProducts" var="product"
+			value="#{beanMantenedorCobro.listaEntidades}" reflow="true"
+			styleClass="products-table" paginator="true" rows="10"
+			paginatorPosition="bottom"
+			emptyMessage="No existen clientes registrados">
+
+			<f:facet name="header">
+				<div class="products-table-header">
+					<span style="font-weight: bold">Buscar por No. Factura</span> <span
+						class="filter-container ui-input-icon-left"> <i
+						class="pi pi-search"></i> <p:inputText id="globalFilter"
+							placeholder="Search" value="#{beanMantenedorCobro.filCriterio}">
+							<p:ajax event="keyup" update="@([id$=dt-products])"
+								process="@this"
+								listener="#{beanMantenedorCobro.buscarRegistrosCriterio}" />
+						</p:inputText>
+					</span>
+				</div>
+			</f:facet>
+			
+			<p:column exportable="false">
+				<p:rowToggler />
+			</p:column>
+			
+			<p:column headerText="Secuencia de Orden" style="text-align: center;"
+				sortBy="#{product.id}" filterBy="#{product.id}">
+				<h:outputText value="#{product.id}" />
+			</p:column>
+			
+			<p:column headerText="Número Factura"
+				sortBy="#{product.numeroFactura}" style="text-align: center;"
+				filterBy="#{product.numeroFactura}">
+				<h:outputText value="#{product.numeroFactura}" />
+			</p:column>
+			<p:column headerText="Número Documento"
+				sortBy="#{product.numeroDocumento}" style="text-align: center;"
+				filterBy="#{product.numeroDocumento}">
+				<h:outputText value="#{product.numeroDocumento}" />
+			</p:column>
+
+			<p:column headerText="Monto" style="text-align: center;"
+				sortBy="#{product.monto}" filterBy="#{product.monto}">
+				<h:outputText value="#{product.monto}" />
+			</p:column>
+
+			<p:column headerText="Saldo" style="text-align: center;"
+				sortBy="#{product.saldo}" filterBy="#{product.saldo}">
+				<h:outputText value="#{product.saldo}" />
+			</p:column>
+
+			<p:column headerText="Fecha Emisión" style="text-align: center;">
+				<h:outputText value="#{product.fechaEmision}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Fecha Vencimiento" style="text-align: center;">
+				<h:outputText value="#{product.fechaVencimiento}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Dias Vencimiento" style="text-align: center;">
+				<h:outputText
+					value="#{beanMantenedorCobro.obtenerDiasVencimiento(product.fechaVencimiento, product.fechaEmision)}">
+				</h:outputText>
+			</p:column>
+
+
+			<p:rowExpansion>
+				<div class="orders-subtable">
+					<h5>Detalles de cobro número: #{product.numeroDocumento}</h5>
+					<p:dataTable var="detalle" value="#{product.listaPago}"
+						reflow="true">
+						<p:column headerText="Número Pago" style="text-align: center;"
+							sortBy="#{detalle.numeroPago}">
+							<h:outputText value="#{detalle.numeroPago}" />
+						</p:column>
+
+						<p:column headerText="Forma Pago" style="text-align: center;"
+							sortBy="#{detalle.tipoPago}">
+							<h:outputText value="#{detalle.tipoPago}" />
+						</p:column>
+
+						<p:column headerText="Valor Pago" style="text-align: center;"
+							sortBy="#{detalle.valorPago}">
+							<h:outputText value="#{detalle.valorPago}" />
+						</p:column>
+
+						<p:column headerText="Nombre Banco" style="text-align: center;"
+							sortBy="#{detalle.nombreBanco}"> 
+							<h:outputText value="#{detalle.nombreBanco}" />
+						</p:column>
+
+						<p:column headerText="Cuenta" style="text-align: center;"
+							sortBy="#{detalle.cuenta}">
+							<h:outputText value="#{detalle.cuenta}" />
+						</p:column>
+
+						<p:column headerText="Número Cheque" style="text-align: center;"
+							sortBy="#{detalle.numeroCheque}">
+							<h:outputText value="#{detalle.numeroCheque}" />
+						</p:column>
+
+
+						<p:column headerText="Fecha Vencimiento Cheque"
+							style="text-align: center;" sortBy="#{detalle.fechaVencimiento}">
+							<h:outputText value="#{detalle.fechaVencimiento}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+
+
+
+					</p:dataTable>
+				</div>
+			</p:rowExpansion>
+
+		</p:dataTable>
+
+	</ui:define>
+
+	<ui:define name="DIALOGO">
+
+	</ui:define>
+
+</ui:composition>

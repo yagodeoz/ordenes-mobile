@@ -1,0 +1,375 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template_formulario_mantenimiento.xhtml">
+
+
+	<ui:define name="TITULO_FORMULARIO">#{beanMantenedorUsuario.tituloPagina}</ui:define>
+
+	<ui:define name="CUERPO_FORMULARIO">
+
+		<div class="p-col-12 p-md-6">
+			<h:outputText value="Usuario "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputText placeholder="Usuario"
+				value="#{beanMantenedorUsuario.usuarioActual.usuario}"
+				onblur="ChangeCase(this);" required="true" id="Usuario"
+				requiredMessage="Debe ingresar el usuario">
+				<f:ajax event="blur" execute="@this" render="mensajes"></f:ajax>
+			</p:inputText>
+		</div>
+		<div class="p-col-12 p-md-6">
+			<h:outputText value="Descripción "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputText placeholder="Descripción"
+				value="#{beanMantenedorUsuario.usuarioActual.lDescripcion}"
+				onblur="ChangeCase(this);" required="true" id="Descripción"
+				requiredMessage="Debe ingresar la descripción">
+				<f:ajax event="blur" execute="@this" render="mensajes"></f:ajax>
+			</p:inputText>
+		</div>
+
+		<div class="p-col-12 p-md-6">
+			<h:outputText value="Email "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputText placeholder="Email"
+				value="#{beanMantenedorUsuario.usuarioActual.correo}"
+				required="true" validatorMessage="Email con formato incorrecto"
+				id="Email" requiredMessage="Debe ingresar el email">
+				<f:validateRegex
+					pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"></f:validateRegex>
+				<f:ajax event="blur" execute="@this" render="mensajes"></f:ajax>
+			</p:inputText>
+		</div>
+
+		<div class="p-col-12 p-md-6">
+			<h:outputText value="Roles "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:selectCheckboxMenu id="Roles"
+				value="#{beanMantenedorUsuario.rolesSeleccionadas}" label="Roles"
+				filter="true" filterMatchMode="startsWith" required="true"
+				requiredMessage="Debe seleccionar el rol del usuario">
+				<f:selectItems value="#{beanMantenedorUsuario.listaRoles}"
+					var="role" itemLabel="#{role.rol}" itemValue="#{role.id}" />
+			</p:selectCheckboxMenu>
+		</div>
+
+		<div class="p-col-12 p-md-12">
+			<p:fileUpload listener="#{beanMantenedorUsuario.subir}"
+				mode="advanced" dragDropSupport="true" update="@this"
+				process="@this" sizeLimit="100000" fileLimit="1"
+				allowTypes="/(\.|\/)(gif|jpe?g|png)$/" cancelLabel="Limpiar"
+				uploadLabel="Subir" invalidFileMessage="Archivo no permitido"
+				invalidSizeMessage="El tamaño no es permitido" required="false"
+				label="Escoja" />
+
+		</div>
+
+	</ui:define>
+
+	<ui:define name="CONTROL_FORMULARIO">
+		<p:commandButton value="Registrar" style="margin-bottom:10px;"
+			id="registrar" styleClass="ui-button-rounded"
+			actionListener="#{beanMantenedorUsuario.guardarOActualizar}"
+			process="contenedor" update="@form" partialSubmit="true" />
+
+	</ui:define>
+
+	<ui:define name="TITULO_TABLA">#{beanMantenedorUsuario.cabeceraTabla}</ui:define>
+
+	<ui:define name="CUERPO_TABLA">
+
+		<p:dataTable value="#{beanMantenedorUsuario.listaEntidades}"
+			var="usuario" widgetVar="tablaUsuarios"
+			emptyMessage="#{beanMantenedorUsuario.mensajeTablaVacia}" rows="8"
+			reflow="true" paginator="true" paginatorPosition="bottom"
+			id="tablaDatos" paginatorAlwaysVisible="false"
+			resizableColumns="true">
+
+
+			<p:column headerText="Avatar">
+
+				<p:graphicImage rendered="#{usuario.imagenReferencia == null}"
+					name="images/menu/avatar.png" library="pandora-layout" value="#"
+					style="outline: aliceblue; width: 33px; height: 33px; vertical-align: top; border-radius: 50%;" />
+
+				<o:graphicImage rendered="#{usuario.imagenReferencia != null}"
+					style="outline: aliceblue; width: 33px; height: 33px; vertical-align: top; border-radius: 50%;"
+					value="#{usuario.imagenReferencia}" dataURI="true"
+					id="imagenAvatar" />
+
+				<p:overlayPanel id="imagePanel" for="imagenAvatar" hideEffect="fade"
+					rendered="#{usuario.imagenReferencia != null}">
+					<o:graphicImage
+						style="outline: aliceblue; width: 200px; height: 200px; vertical-align: top; border-radius: 10%;"
+						value="#{usuario.imagenReferencia}" dataURI="true"
+						rendered="#{usuario.imagenReferencia != null}" />
+				</p:overlayPanel>
+			</p:column>
+
+			<p:column  footerText="Usuario">
+
+				<f:facet name="header">
+					<p:inputText id="counter" value="#{beanMantenedorUsuario.filUsuario}"  >
+					<p:ajax event="keyup"  update="@([id$=tablaDatos])"
+							process="@this"  listener="#{beanMantenedorUsuario.buscarUsuarios}"/>
+					</p:inputText>
+				</f:facet>
+
+
+				<h:outputText value="#{usuario.usuario}" />
+			</p:column>
+
+			<p:column headerText="Descripción">
+				<h:outputText value="#{usuario.lDescripcion}" />
+			</p:column>
+
+			<p:column footerText="Estado" filterBy="#{usuario.estado}"
+				filterMatchMode="exact">
+				<f:facet name="filter">
+					<p:selectOneMenu onchange="PF('tablaUsuarios').filter()">
+						<f:selectItem itemLabel="ESTADO" itemValue="#{null}"
+							noSelectionOption="true" />
+						<f:selectItem itemLabel="ACTIVO" itemValue="A" />
+						<f:selectItem itemLabel="INACTIVO" itemValue="I" />
+					</p:selectOneMenu>
+				</f:facet>
+
+				<h:outputText
+					value="#{usuario.estado eq beanMantenedorUsuario.estadoActivo?'ACTIVO':'INACTIVO'}" />
+			</p:column>
+
+			<p:column headerText="Email">
+				<p:tooltip for="emailCol" value="#{usuario.correo}" position="top" />
+				<p:commandLink title="#{cola.id}" id="emailCol">
+					<span class="fa-stack fa-lg"> <i
+						class="fa fa-circle fa-stack-2x"></i> <i
+						class="fa fa-envelope-o fa-stack-1x fa-inverse" aria-hidden="true"></i>
+					</span>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Fecha Registro">
+				<h:outputText value="#{usuario.fechaRegistro}">
+					<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+						timeZone="#{beanMantenedorUsuario.currentTimeZone}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Acciones">
+				<div class="p-grid ui-fluid">
+					<div class="p-col-12 p-md-3">
+						<p:commandLink title="Cambiar Estado"
+							actionListener="#{beanMantenedorUsuario.cambiarEstado}"
+							update="@form" process="@this" rendered="#{empty usuario.lEsAdmin  || !usuario.lEsAdmin eq 'S'}">
+
+							<i class="fa fa-exchange Fs20 BoldGray DispBlock"> </i>
+							<f:attribute
+								name="#{beanMantenedorUsuario.nombreAtributoCambioEstado}"
+								value="#{usuario}"></f:attribute>
+
+							<p:confirm header="Confirmación"
+								message="Seguro que desea realizar esta operación?"
+								icon="ui-icon-alert" />
+						</p:commandLink>
+					</div>
+					<div class="p-col-12 p-md-3">
+						<p:commandLink title="Actualizar"
+							actionListener="#{beanMantenedorUsuario.actualizarEntidad}"
+							update="@([id$=dialogoMantenimiento])"
+							oncomplete="PF('dialogoMantenimiento').show();" process="@this">
+							<i class="fa fa-edit Fs20 BoldGray DispBlock"> </i>
+							<f:attribute
+								name="#{beanMantenedorUsuario.nombreAtributoCambioEstado}"
+								value="#{usuario}"></f:attribute>
+						</p:commandLink>
+					</div>
+
+					<div class="p-col-12 p-md-3">
+						<p:commandLink id="rolesAsignados" title="Ver los roles asignados"
+							oncomplete="PF('dialogoMantenimientoRolesUsuario').show()"
+							actionListener="#{beanMantenedorUsuario.seleccionarEntidad}"
+							update="@([id$=dialogoMantenimientoRolesUsuario])"
+							process="@this" rendered="#{empty usuario.lEsAdmin  || !usuario.lEsAdmin eq 'S'}">
+
+							<i class="fa fa-group Fs20 BoldGray DispBlock"> </i>
+							<f:attribute
+								name="#{beanMantenedorUsuario.nombreAtributoCambioEstado}"
+								value="#{usuario}"></f:attribute>
+						</p:commandLink>
+					</div>
+					<div class="p-col-12 p-md-3">
+						<p:commandLink title="Restablecer Contraseña" 
+							actionListener="#{beanMantenedorUsuario.actualizarContrasenia}"
+							update="@([id$=mensajes])" process="@this" rendered="#{empty usuario.lEsAdmin  || !usuario.lEsAdmin eq 'S'}">
+
+							<i class="fa fa-key Fs20 BoldGray DispBlock"> </i>
+							<f:attribute
+								name="#{beanMantenedorUsuario.nombreAtributoCambioEstado}"
+								value="#{usuario}"></f:attribute>
+
+							<p:confirm header="Confirmación"
+								message="Seguro que desea realizar esta operación?"
+								icon="ui-icon-alert" />
+						</p:commandLink>
+					</div>
+					
+					<div class="p-col-12 p-md-3">
+						<p:commandLink title="Sucursales" 
+							actionListener="#{beanMantenedorUsuario.actualizarSucursales}"
+							update="@([id$=dialogoMantenimientoSucursalesUsuario])"
+							oncomplete="PF('dialogoMantenimientoSucursalesUsuario').show();" process="@this"  
+							rendered="#{empty usuario.lEsAdmin  || !usuario.lEsAdmin eq 'S'}">
+
+							<i class="fa fa-check Fs20 BoldGray DispBlock"> </i>
+							<f:attribute
+								name="#{beanMantenedorUsuario.nombreAtributoCambioEstado}"
+								value="#{usuario}"></f:attribute>
+							
+						</p:commandLink>
+					</div>
+
+				</div>
+			</p:column>
+		</p:dataTable>
+
+	</ui:define>
+
+
+	<ui:define name="form_comp_visual">
+		<p:dialog widgetVar="dialogoMantenimientoRolesUsuario" modal="true"
+			minWidth="1024" height="300" id="dialogoMantenimientoRolesUsuario"
+			width="55%"
+			header="Roles asignados para el usuario : #{beanMantenedorUsuario.entidadRegistrar.usuario}"
+			showHeader="true">
+			<p:outputPanel id="panelSeleccionRoles">
+				<p:pickList id="listaRoles"
+					value="#{beanMantenedorUsuario.listaSeleccionRol}" var="roles"
+					effect="bounce" itemValue="#{roles}" itemLabel="#{roles}"
+					showCheckbox="true" responsive="true" showSourceFilter="true"
+					showTargetFilter="true" filterMatchMode="contains">
+
+					<f:facet name="sourceCaption">Roles por asignar</f:facet>
+					<f:facet name="targetCaption">Roles Asignados</f:facet>
+					<p:ajax event="transfer"
+						listener="#{beanMantenedorUsuario.controlTransferencia}"
+						update="panelSeleccionRoles" process="@this" />
+
+					<p:column style="width:90%;">
+						<h:outputText value="#{roles}" />
+					</p:column>
+				</p:pickList>
+			</p:outputPanel>
+		</p:dialog>
+		
+		
+		<p:dialog widgetVar="dialogoMantenimientoSucursalesUsuario" modal="true"
+			minWidth="1024" height="300" id="dialogoMantenimientoSucursalesUsuario"
+			width="55%"
+			header="Sucursales asignados para el usuario : #{beanMantenedorUsuario.entidadRegistrar.usuario}"
+			showHeader="true">
+			<p:outputPanel id="panelSeleccionSucursal">
+				
+				<p:pickList id="listaSucursales"
+					value="#{beanMantenedorUsuario.listaSeleccionSucursal}" var="sucursal"
+					effect="bounce" itemValue="#{sucursal}" itemLabel="#{sucursal}"
+					showCheckbox="true" responsive="true" showSourceFilter="true"
+					showTargetFilter="true" filterMatchMode="contains">
+
+					<f:facet name="sourceCaption">Sucursales por asignar</f:facet>
+					<f:facet name="targetCaption">Sucursales Asignadas</f:facet>
+					<p:ajax event="transfer"
+						listener="#{beanMantenedorUsuario.controlTransferenciasSucursal}"
+						update="panelSeleccionSucursal" process="@this" />
+
+					<p:column style="width:90%;">
+						<h:outputText value="#{sucursal}" />
+					</p:column>
+				</p:pickList>
+				
+				
+			</p:outputPanel>
+		</p:dialog>
+
+	</ui:define>
+
+
+
+	<ui:define name="cab_dialogo">
+		#{beanMantenedorUsuario.cabeceraDialogo}
+	</ui:define>
+
+	<ui:define name="datos_dialogo">
+		<div class="p-col-12 p-md-2">
+			<h:outputText value="Usuario *: " />
+		</div>
+
+		<div class="p-col-12 p-md-4">
+			<p:inputText placeholder="Usuario"
+				value="#{beanMantenedorUsuario.usuarioActual.usuario}"
+				onblur="ChangeCase(this);" required="true" id="UsuarioDialogo"
+				requiredMessage="Debe ingresar el usuario">
+				<f:ajax event="blur" execute="@this" render="mensajeDialogo"></f:ajax>
+			</p:inputText>
+		</div>
+
+		<div class="p-col-12 p-md-2">
+			<h:outputText value="Descripción *: " />
+		</div>
+
+		<div class="p-col-12 p-md-4">
+			<p:inputText placeholder="Descripción"
+				value="#{beanMantenedorUsuario.usuarioActual.lDescripcion}"
+				onblur="ChangeCase(this);" required="true" id="DescripciónDialogo"
+				requiredMessage="Debe ingresar la descripción">
+				<f:ajax event="blur" execute="@this" render="mensajeDialogo"></f:ajax>
+			</p:inputText>
+		</div>
+
+		<div class="p-col-12 p-md-2">
+			<h:outputText value="Email *: " />
+		</div>
+
+		<div class="p-col-12 p-md-4">
+			<p:inputText placeholder="Email"
+				value="#{beanMantenedorUsuario.usuarioActual.correo}"
+				required="true" validatorMessage="Email con formato incorrecto"
+				id="EmailDialogo" requiredMessage="Debe ingresar el email">
+				<f:validateRegex
+					pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"></f:validateRegex>
+				<f:ajax event="blur" execute="@this" render="mensajeDialogo"></f:ajax>
+			</p:inputText>
+		</div>
+
+		<div class="p-col-12 p-md-12">
+			<p:fileUpload listener="#{beanMantenedorUsuario.subir}"
+				mode="advanced" dragDropSupport="true" update="@this"
+				process="@this" sizeLimit="100000" fileLimit="1"
+				allowTypes="/(\.|\/)(gif|jpe?g|png)$/" cancelLabel="Limpiar"
+				uploadLabel="Subir" invalidFileMessage="Archivo no permitido"
+				invalidSizeMessage="El tamaño no es permitido" required="false"
+				label="Escoja" />
+
+		</div>
+
+	</ui:define>
+
+	<ui:define name="control_formulario_dialogo">
+		<p:commandButton value="Actualizar" style="margin-bottom:10px;"
+			id="actualizar" styleClass="ui-button-rounded"
+			actionListener="#{beanMantenedorUsuario.guardarOActualizar}"
+			process="PanelActualizar"
+			update="@([id$=mensajes]), PanelActualizar, @([id$=tablaDatos])"
+			oncomplete="PF('dialogoMantenimiento').hide();" partialSubmit="true" />
+	</ui:define>
+
+	<ui:define name="control_dialogo">
+		<p:ajax event="close" update="PanelActualizar"
+			listener="#{beanMantenedorUsuario.eventoControlCierreDialogo}" />
+	</ui:define>
+
+
+
+</ui:composition>

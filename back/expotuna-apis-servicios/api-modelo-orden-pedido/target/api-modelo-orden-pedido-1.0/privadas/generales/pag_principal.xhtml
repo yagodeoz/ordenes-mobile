@@ -1,0 +1,616 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:po="http://primefaces.org/pandora"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Alimesa - Dashboard</ui:define>
+
+	<ui:define name="viewname">
+		<li>Alimesa</li>
+		<li><i class="pi pi-angle-right" /></li>
+		<li><p:link>Dashboard</p:link></li>
+	</ui:define>
+
+	<ui:define name="head">
+		<h:outputScript name="js/chart.js" library="demo" />
+		<script type="text/javascript">
+           
+            function generateRandomNumber() {
+                return Math.floor(Math.random() * 100) + 1;
+            }
+
+            $(function () {
+                var newsrow = $('.news-row');
+                    $('.point').on('click', function (e) {
+                        var point = $(this);
+
+                        point.siblings('.active-point').removeClass('active-point');
+                        point.addClass('active-point');
+
+                        newsrow.removeClass('news-1-active');
+
+                        if (point.hasClass('point-1')) {
+                            newsrow.css('transform', 'translate3d(0, 0, 0)');
+                            newsrow.removeClass('news-2-active');
+                            newsrow.removeClass('news-3-active');
+                            newsrow.addClass('news-1-active');
+                        } else if (point.hasClass('point-2')) {
+                            newsrow.css('transform', 'translate3d(-100%, 0, 0)');
+                            newsrow.removeClass('news-1-active');
+                            newsrow.removeClass('news-3-active');
+                            newsrow.addClass('news-2-active');
+                        } else if (point.hasClass('point-3')) {
+                            newsrow.css('transform', 'translate3d(-200%, 0, 0)');
+                            newsrow.removeClass('news-2-active');
+                            newsrow.removeClass('news-1-active');
+                            newsrow.addClass('news-3-active');
+                        }
+
+                        e.preventDefault();
+                });
+                $('.slide-button').on('click', function (e) {
+                        var button = $(this);
+                        var point= $('.point');
+                        var point1= $('.point-1');
+                        var point2= $('.point-2');
+                        var point3= $('.point-3');
+
+                        point.siblings('.active-point').removeClass('active-point');
+
+                        if (button.hasClass('right-button')) {
+                            if (newsrow.hasClass('news-1-active')) {
+                                newsrow.css('transform', 'translate3d(-100%, 0, 0)');
+                                newsrow.removeClass('news-1-active');
+                                newsrow.removeClass('news-3-active');
+                                newsrow.addClass('news-2-active');
+                                point2.addClass('active-point');
+                            }
+                            else if (newsrow.hasClass('news-2-active')) {
+                                newsrow.css('transform', 'translate3d(-200%, 0, 0)');
+                                newsrow.removeClass('news-2-active');
+                                newsrow.removeClass('news-1-active');
+                                newsrow.addClass('news-3-active');
+                                point3.addClass('active-point');
+                            }
+                        } else if (button.hasClass('left-button')) {
+                            if (newsrow.hasClass('news-2-active')) {
+                                newsrow.css('transform', 'translate3d(0, 0, 0)');
+                                newsrow.removeClass('news-2-active');
+                                newsrow.removeClass('news-3-active');
+                                newsrow.addClass('news-1-active');
+                                point1.addClass('active-point');
+                            }
+                            else if (newsrow.hasClass('news-3-active')) {
+                                newsrow.css('transform', 'translate3d(-100%, 0, 0)');
+                                newsrow.removeClass('news-1-active');
+                                newsrow.removeClass('news-3-active');
+                                newsrow.addClass('news-2-active');
+                                point2.addClass('active-point');
+                            }
+                        } 
+                        e.preventDefault();
+                });
+            });
+
+            $(function () {
+                var sections = $('.charts-sections'),
+                    department = $('.department'),
+                    chartContent = sections.children('.chart-content');
+                    activeChartContent = chartContent.eq(department.filter('.active-chart').index());
+
+                    activeChartContent.addClass('active-chart-content');
+
+                    department.on('click', function (e) {
+                    var button = $(this);
+                    button.siblings('.active-chart').removeClass('active-chart');
+                    button.addClass('active-chart');
+
+                    chartContent.height('');
+
+                    if (button.hasClass('dept-1')) {
+                        sections.css('transform', 'translate3d(0, 0, 0)');
+                    } else if (button.hasClass('dept-2')) {
+                        sections.css('transform', 'translate3d(-100%, 0, 0)');
+                    } else if (button.hasClass('dept-3')) {
+                        sections.css('transform', 'translate3d(-200%, 0, 0)');
+                    } else if (button.hasClass('dept-4')) {
+                        sections.css('transform', 'translate3d(-300%, 0, 0)');
+                    } else if (button.hasClass('dept-5')) {
+                        sections.css('transform', 'translate3d(-400%, 0, 0)');
+                    }
+                    e.preventDefault();
+                });
+
+               
+            });
+        </script>
+
+		<script type="text/javascript">
+          $(function () {
+            var ctx = document.getElementById("chart2").getContext('2d');
+            var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'],
+                        datasets: [{
+                            label: 'Guayaquil',
+                            data: [1, 2, 5, 3, 12, 7, 15],
+                            borderColor: [
+                                '#F95052'
+                            ],
+                            borderWidth: 3,
+                            fill: true,
+                            backgroundColor: [
+                                'rgba(253,176,175,.3)',
+                            ]
+                        },
+                        {
+                            label: 'Quito',
+                            data: [3, 7, 2, 17, 15, 13, 19],
+                            borderColor: [
+                                '#68DBD3'
+                            ],
+                            borderWidth: 3,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        fontFamily: "IBMPlexSans",
+                        hover: {
+                            mode: 'index'
+                        },
+                        scales: {
+                            xAxes: [{
+                                gridLines: {
+                                    display: false
+                                },
+                                ticks: {
+                                    fontColor: '#65686a'
+                                }
+                            }],
+                            yAxes: [{
+                                gridLines: {
+                                    display: false
+                                },
+                                ticks: {
+                                    fontColor: '#65686a'
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: true,
+                            labels: {
+                                fontColor: '#191a1c'
+                            }
+                        }
+                    }
+                });
+            var ctx2 = document.getElementById("chart1").getContext('2d');
+            var myChart2 = new Chart(ctx2, {
+                    type: 'radar',
+                    data: {
+                    	labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'],
+                        datasets: [{
+                            label: 'Ordenes',
+                            data: [0,10, 20, 20, 30, 40, 50],
+                            backgroundColor: [
+                                '#F99D53',
+                            ],
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        fontFamily: "'Candara', 'Calibri', 'Courier', 'serif'",
+                        hover: {
+                            mode: 'index'
+                        },
+                        scales: {
+                            xAxes: [{
+                                gridLines: {
+                                    display: false
+                                },
+                                ticks: {
+                                    fontColor: '#9199a9'
+                                }
+                            }],
+                            yAxes: [{
+                                gridLines: {
+                                    display: false
+                                },
+                                ticks: {
+                                    fontColor: '#9199a9'
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: true,
+                            labels: {
+                                fontColor: '#9199a9'
+                            }
+                        }
+                    }
+                });
+
+            var ctx3 = document.getElementById("chart3").getContext('2d');
+            var myChart3 = new Chart(ctx3, {
+                    type: 'horizontalBar',
+                    data: {
+                    	labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'],
+                        datasets: [{
+                            label: 'Ordenes',
+                            barPercentage: 0.5,
+                            barThickness: 6,
+                            maxBarThickness: 8,
+                            minBarLength: 2,
+                            data: [0,10, 20, 20, 30, 40, 50],
+                            backgroundColor: [
+                                '#7DF2EA',
+                                '#95C4EF',
+                                '#FED3B0',
+                                '#FDB0B0',
+                                '#F493D4',
+                                '#6492BD',
+                                '#D153A8',
+                            ],
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        fontFamily: "'Candara', 'Calibri', 'Courier', 'serif'",
+                        hover: {
+                            mode: 'index'
+                        },
+                        scales: {
+                            xAxes: [{
+                                gridLines: {
+                                    display: false
+                                },
+                                ticks: {
+                                    fontColor: '#9199a9'
+                                }
+                            }],
+                            yAxes: [{
+                                gridLines: {
+                                    display: false
+                                },
+                                ticks: {
+                                    fontColor: '#9199a9'
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: true,
+                            labels: {
+                                fontColor: '#9199a9'
+                            }
+                        }
+                    }
+                });
+            
+
+            var ctx4 = document.getElementById("chart4").getContext('2d');
+            var myChart4 = new Chart(ctx4, {
+                    type: 'line',
+                    data: {
+                        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                        datasets: [{
+                            label: 'Sales',
+                            data: [12, 19, 3, 5, 2, 3, 9],
+                            borderColor: [
+                                '#68DBD3',
+                            ],
+                            borderWidth: 3,
+                            borderDash:[5, 5],
+                            fill: false,
+                            pointRadius: 3
+                        }, {
+                            label: 'Income',
+                            data: [1, 2, 5, 3, 12, 7, 15],
+                            backgroundColor: [
+                                'rgba(254,229,208,0.4)',
+                            ],
+                            borderColor: [
+                                '#FDB071',
+                            ],
+                            borderWidth: 3,
+                            fill: true
+                        },
+                        {
+                            label: 'Expenses',
+                            data: [7, 12, 15, 5, 3, 13, 21],
+                            borderColor: [
+                                '#81B1DD',
+                            ],
+                            borderWidth: 3,
+                            fill: false,
+                            pointRadius: [4, 6, 4, 12, 8, 0, 4]
+                        },
+                        {
+                            label: 'New Users',
+                            data: [3, 7, 2, 17, 15, 13, 19],
+                            borderColor: [
+                                '#DE73BB',
+                            ],
+                            borderWidth: 3,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        hover: {
+                            mode: 'index'
+                        },
+                        scales: {
+                            xAxes: [{
+                                display: true,
+                            }],
+                            yAxes: [{
+                                display: true,
+                            }]
+                        }
+                    }
+                });
+
+                var ctx5 = document.getElementById("chart5").getContext('2d');
+                var myChart5 = new Chart(ctx5, {
+                    type: 'bar',
+                    data: {
+                        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                        datasets: [{
+                            label: 'Ads',
+                            barPercentage: 0.5,
+                            barThickness: 6,
+                            maxBarThickness: 8,
+                            minBarLength: 2,
+                            data: [0,10, 20, 20, 30, 40, 50],
+                            backgroundColor: [
+                                '#BE3D94',
+                                '#7DF2EA',
+                                '#95C4EF',
+                                '#FED3B0',
+                                '#FDB0B0',
+                                '#F493D4',
+                                '#6492BD',
+                                '#D153A8',
+                            ],
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        fontFamily: "'Candara', 'Calibri', 'Courier', 'serif'",
+                        hover: {
+                            mode: 'index'
+                        },
+                        scales: {
+                            xAxes: [{
+                                gridLines: {
+                                    display: false
+                                },
+                                ticks: {
+                                    fontColor: '#9199a9'
+                                }
+                            }],
+                            yAxes: [{
+                                gridLines: {
+                                    display: false
+                                },
+                                ticks: {
+                                    fontColor: '#9199a9'
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: true,
+                            labels: {
+                                fontColor: '#9199a9'
+                            }
+                        }
+                    }
+                });
+           });
+     
+        </script>
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="p-grid layout-dashboard">
+			<div class="p-col-12 p-md-6 p-lg-4">
+				<div class="overview-box messages">
+					<div class="box-text">
+						<h4>Órdenes</h4>
+						<span class="span-text">Generadas Hoy</span>
+					</div>
+					<div class="box-image">
+						<p:graphicImage name="images/dashboard/asset-messages.svg"
+							library="pandora-layout" />
+					</div>
+				</div>
+			</div>
+			<div class="p-col-12 p-md-6 p-lg-4">
+				<div class="overview-box logins">
+					<div class="box-text">
+						<h4>Órdenes</h4>
+						<span class="span-text">Sucursales</span>
+					</div>
+					<div class="box-image">
+						<p:graphicImage name="images/dashboard/asset-step-2.png"
+							library="pandora-layout" />
+					</div>
+				</div>
+			</div>
+			<div class="p-col-12 p-md-6 p-lg-4">
+				<div class="overview-box files">
+					<div class="box-text">
+						<h4>Órdenes</h4>
+						<span class="span-text">Gráfico</span>
+					</div>
+					<div class="box-image">
+						<p:graphicImage name="images/dashboard/chart.jpg"
+							library="pandora-layout" style="width: 65px;" />
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="p-col-12 p-md-6 p-lg-4">
+				<div class="card timeline">
+					<span class="span-text">Viernes</span>
+					<h4 class="span-text">25 Junio</h4>
+					<ul>
+						<li>
+							<div class="timeline-item-left">
+								<div class="timeline-icon">
+									<i class="pi pi-file" /> <span class="span-text">12:42</span>
+								</div>
+								<i class="pi pi-ellipsis-v" />
+							</div>
+							<div class="timeline-item-right">
+								<span class="span-text">0005</span> <span class="span-text"><i
+									class="pi pi-circle-on" /> Guayaquil</span>
+								<h5>Judith Segovia</h5>
+								<p>Total: $12,200</p>
+								<div class="images">
+									<p:graphicImage name="images/dashboard/asset-step-2.png"
+										library="pandora-layout" />
+									<p:graphicImage name="images/dashboard/asset-step-2.png"
+										library="pandora-layout" />
+								</div>
+							</div>
+						</li>
+
+						<li>
+							<div class="timeline-item-left">
+								<div class="timeline-icon">
+									<i class="pi pi-file" /> <span class="span-text">13:00</span>
+								</div>
+								<i class="pi pi-ellipsis-v" />
+							</div>
+							<div class="timeline-item-right">
+								<span class="span-text">0006</span> <span class="span-text"><i
+									class="pi pi-circle-on" /> Guayaquil</span>
+								<h5>Miguel Segovia</h5>
+								<p>Total: $20,200</p>
+								<div class="images">
+									<p:graphicImage name="images/dashboard/asset-step-2.png"
+										library="pandora-layout" />
+									<p:graphicImage name="images/dashboard/asset-step-2.png"
+										library="pandora-layout" />
+									<p:graphicImage name="images/dashboard/asset-step-2.png"
+										library="pandora-layout" />
+									<p:graphicImage name="images/dashboard/asset-step-2.png"
+										library="pandora-layout" />
+								</div>
+							</div>
+						</li>
+
+					</ul>
+				</div>
+			</div>
+
+
+
+			<div class="p-col-12 p-lg-8">
+
+				<div class="card statistic-charts card-w-title">
+					<div class="departments">
+						<div class="header">
+							<h4>Sucursales venta por mes</h4>
+						</div>
+						<a href="#" class="department dept-1 active-chart"> <span
+							class="dept-icon"> <p:graphicImage
+									name="images/dashboard/icon-biz.png" library="pandora-layout" />
+						</span>
+							<h4>Guayaquil</h4>
+							<div class="stats">
+								<h6>Total: $3,228.14</h6>
+								<span>Sub Total: $2,128.14</span>
+							</div>
+						</a> <a href="#" class="department dept-2 active-chart"> <span
+							class="dept-icon"> <p:graphicImage
+									name="images/dashboard/icon-biz.png" library="pandora-layout" />
+						</span>
+							<h4>Quito</h4>
+							<div class="stats">
+								<h6>Total: $3,228.14</h6>
+								<span>Sub Total: $2,128.14</span>
+							</div>
+						</a> <a href="#" class="department dept-3 active-chart"> <span
+							class="dept-icon"> <p:graphicImage
+									name="images/dashboard/icon-biz.png" library="pandora-layout" />
+						</span>
+							<h4>Cuenca</h4>
+							<div class="stats">
+								<h6>Total: $3,228.14</h6>
+								<span>Sub Total: $2,128.14</span>
+							</div>
+						</a>
+
+					</div>
+					<div class="charts">
+						<div class="header">
+							<h4>Gráfica</h4>
+						</div>
+						<div class="charts-wrapper">
+							<div class="charts-sections">
+								<div class="chart-content chart-1">
+									<canvas id="chart1"></canvas>
+								</div>
+								<div class="chart-content chart-1">
+									<canvas id="chart2"></canvas>
+								</div>
+								<div class="chart-content chart-1">
+									<canvas id="chart3"></canvas>
+								</div>
+								<div class="chart-content chart-1">
+									<canvas id="chart4"></canvas>
+								</div>
+								<div class="chart-content chart-1">
+									<canvas id="chart5"></canvas>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="p-col-12 p-lg-12">
+				<div class="card sales card-w-title">
+					<div class="card-header">
+						<h4>Órdenes Pendientes</h4>
+					</div>
+					<div class="sales-content">
+						<p:dataTable id="productsTable" var="product" reflow="true"
+							paginatorPosition="bottom" size="small" paginator="true" rows="5">
+							<p:column headerText="Número Órden">
+							</p:column>
+							<p:column headerText="Cliente">
+							</p:column>
+							<p:column headerText="Subtotal">
+							</p:column>
+							<p:column headerText="Impuesto">
+							</p:column>
+							<p:column headerText="Total">
+							</p:column>
+							<p:column style="text-align: center">
+								<p:commandButton icon="pi pi-search" />
+							</p:column>
+						</p:dataTable>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</ui:define>
+</ui:composition>

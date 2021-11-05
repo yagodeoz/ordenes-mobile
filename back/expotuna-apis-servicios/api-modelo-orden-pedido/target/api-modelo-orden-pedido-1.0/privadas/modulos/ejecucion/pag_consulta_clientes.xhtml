@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template_consulta.xhtml"
+	xmlns:o="http://omnifaces.org/ui">
+
+
+
+	<ui:define name="TOOLBAR">
+		<p:toolbar styleClass="p-mb-4">
+			<p:toolbarGroup name="right">
+				<p:commandButton value="Sincronizar" icon="pi pi-download"
+					styleClass="ui-button-success" ajax="false">
+					<p:dataExporter type="pdf" target="dt-products" fileName="products" />
+				</p:commandButton>
+
+				<p:commandButton value="Export" icon="pi pi-upload"
+					styleClass="ui-button-help" ajax="false">
+					<p:dataExporter type="pdf" target="dt-products" fileName="products" />
+				</p:commandButton>
+			</p:toolbarGroup>
+		</p:toolbar>
+
+	</ui:define>
+
+	<ui:define name="TABLA">
+
+		<p:dataTable id="dt-products" widgetVar="dtProducts" var="product"
+			value="#{beanMantenedorCliente.listaEntidades}" reflow="true"
+			styleClass="products-table" paginator="true" rows="10"
+			paginatorPosition="bottom"
+			emptyMessage="No existen clientes registrados">
+
+			<f:facet name="header">
+				<div class="products-table-header">
+					<span style="font-weight: bold">Buscar Clientes por Nombre</span> <span
+						class="filter-container ui-input-icon-left"> <i
+						class="pi pi-search"></i> <p:inputText id="globalFilter"
+							placeholder="Search" value="#{beanMantenedorCliente.filCriterio}">
+							<p:ajax event="keyup" update="@([id$=dt-products])"
+								process="@this"
+								listener="#{beanMantenedorCliente.buscarRegistrosCriterio}" />
+						</p:inputText>
+					</span>
+				</div>
+			</f:facet>
+
+			<p:column headerText="Registro Fiscal"
+				sortBy="#{product.identificacionComprador}"
+				style="text-align: center;"
+				filterBy="#{product.identificacionComprador}">
+				<h:outputText value="#{product.identificacionComprador}" />
+			</p:column>
+			<p:column headerText="Razón Social"
+				sortBy="#{product.razonSocialComprador}" style="text-align: center;"
+				filterBy="#{product.razonSocialComprador}">
+				<h:outputText value="#{product.razonSocialComprador}" />
+			</p:column>
+
+
+			<p:column headerText="Dirección"
+				sortBy="#{product.direccionComprador}" style="text-align: center;"
+				filterBy="#{product.direccionComprador}">
+				<h:outputText value="#{product.direccionComprador}" />
+			</p:column>
+
+			<p:column headerText="Email" style="text-align: center;"
+				sortBy="#{product.emailsComprador}"
+				filterBy="#{product.emailsComprador}">
+				<h:outputText value="#{product.emailsComprador}" />
+			</p:column>
+
+			<p:column headerText="Cupo" style="text-align: center;">
+				<h:outputText value="#{product.cupo}" />
+			</p:column>
+
+
+			<p:column headerText="Imagen Principal" exportable="false"
+				style="text-align: center;">
+
+				<p:graphicImage name="images/menu/avatar.png"
+					library="pandora-layout" value="#"
+					style="outline: aliceblue; width: 33px; height: 33px; vertical-align: top; border-radius: 50%;"
+					styleClass="product-image" />
+			</p:column>
+
+
+		</p:dataTable>
+
+	</ui:define>
+
+	<ui:define name="DIALOGO">
+
+	</ui:define>
+
+</ui:composition>

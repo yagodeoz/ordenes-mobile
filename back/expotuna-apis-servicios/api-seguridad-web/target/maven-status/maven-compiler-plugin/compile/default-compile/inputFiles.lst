@@ -1,0 +1,15 @@
+C:\ALIMESA-PROYECTO-NUEVO\ws\bk\expotuna-apis-servicios\api-seguridad-web\src\main\java\com\alimesa\ordenpedido\librerias\excepciones\ExcepcionFalloTecnico.java
+C:\ALIMESA-PROYECTO-NUEVO\ws\bk\expotuna-apis-servicios\api-seguridad-web\src\main\java\com\alimesa\ordenpedido\librerias\generales\ClonadorObjetos.java
+C:\ALIMESA-PROYECTO-NUEVO\ws\bk\expotuna-apis-servicios\api-seguridad-web\src\main\java\com\alimesa\ordenpedido\librerias\excepciones\ExcepcionAplicacion.java
+C:\ALIMESA-PROYECTO-NUEVO\ws\bk\expotuna-apis-servicios\api-seguridad-web\src\main\java\com\alimesa\ordenpedido\librerias\generales\GestorQuerysJDBC.java
+C:\ALIMESA-PROYECTO-NUEVO\ws\bk\expotuna-apis-servicios\api-seguridad-web\src\main\java\com\alimesa\ordenpedido\librerias\excepciones\ExcepcionParametrosQuerys.java
+C:\ALIMESA-PROYECTO-NUEVO\ws\bk\expotuna-apis-servicios\api-seguridad-web\src\main\java\com\alimesa\ordenpedido\librerias\generales\UtilEncriptarDataSource.java
+C:\ALIMESA-PROYECTO-NUEVO\ws\bk\expotuna-apis-servicios\api-seguridad-web\src\main\java\com\alimesa\ordenpedido\librerias\excepciones\ExcepcionEliminacionNoPermitida.java
+C:\ALIMESA-PROYECTO-NUEVO\ws\bk\expotuna-apis-servicios\api-seguridad-web\src\main\java\com\alimesa\ordenpedido\librerias\excepciones\ExcepcionLogin.java
+C:\ALIMESA-PROYECTO-NUEVO\ws\bk\expotuna-apis-servicios\api-seguridad-web\src\main\java\com\alimesa\ordenpedido\librerias\generales\UtilCryptography.java
+C:\ALIMESA-PROYECTO-NUEVO\ws\bk\expotuna-apis-servicios\api-seguridad-web\src\main\java\com\alimesa\ordenpedido\loginmodule\LoginModuleWildFly.java
+C:\ALIMESA-PROYECTO-NUEVO\ws\bk\expotuna-apis-servicios\api-seguridad-web\src\main\java\com\alimesa\ordenpedido\loginmodule\servicios\IServiciosLoginModule.java
+C:\ALIMESA-PROYECTO-NUEVO\ws\bk\expotuna-apis-servicios\api-seguridad-web\src\main\java\com\alimesa\ordenpedido\loginmodule\servicios\jdbc\ServicioLoginModuleJDBC.java
+C:\ALIMESA-PROYECTO-NUEVO\ws\bk\expotuna-apis-servicios\api-seguridad-web\src\main\java\com\alimesa\ordenpedido\librerias\excepciones\ExcepcionEncriptacion.java
+C:\ALIMESA-PROYECTO-NUEVO\ws\bk\expotuna-apis-servicios\api-seguridad-web\src\main\java\com\alimesa\ordenpedido\librerias\excepciones\ExcepcionLocalizacionServicio.java
+C:\ALIMESA-PROYECTO-NUEVO\ws\bk\expotuna-apis-servicios\api-seguridad-web\src\main\java\com\alimesa\ordenpedido\librerias\excepciones\ExcepcionFiltroIncompleto.java

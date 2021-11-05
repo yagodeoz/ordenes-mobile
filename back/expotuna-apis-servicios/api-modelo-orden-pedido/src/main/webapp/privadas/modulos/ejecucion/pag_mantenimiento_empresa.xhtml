@@ -1,0 +1,406 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template_formulario_mantenimiento.xhtml">
+
+
+	<ui:define name="TITULO_FORMULARIO">#{beanMantendorFactEmpresa.tituloPagina}</ui:define>
+
+	<ui:define name="CUERPO_FORMULARIO">
+
+		<div class="p-col-12 p-md-6">
+			<h:outputText value="Nombre/Razón Social "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputText placeholder="Nombre/Razón Social "
+				value="#{beanMantendorFactEmpresa.entidadRegistrar.lRazonSocial}"
+				id="RazonSocial" onblur="ChangeCase(this);" required="true"
+				requiredMessage="Debe ingresar la razón social de la empresa">
+				<f:ajax event="blur" execute="@this" render="mensajes"></f:ajax>
+			</p:inputText>
+		</div>
+		<div class="p-col-12 p-md-6">
+			<h:outputText value="Identificación "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputMask mask="9?999999999999" maxlength="13"
+				placeholder="Identificación"
+				value="#{beanMantendorFactEmpresa.entidadRegistrar.lIdentificacion}"
+				required="true" id="Identificacion"
+				requiredMessage="Debe ingresar el ruc">
+				<f:ajax event="blur" execute="@this" render="mensajes"></f:ajax>
+			</p:inputMask>
+
+		</div>
+
+
+		<div class="p-col-12 p-md-4">
+			<h:outputText value="Resolución Nro "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputText placeholder="Contribuyente Especial Resolución Nro"
+				value="#{beanMantendorFactEmpresa.entidadRegistrar.numeroContribuyenteEspecial}"
+				id="contributenyente">
+			</p:inputText>
+		</div>
+
+		<div class="p-col-12 p-md-4">
+			<h:outputText value="Obligado Contabilidad "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:selectOneMenu
+				value="#{beanMantendorFactEmpresa.entidadRegistrar.obligadoLlevarContabilidad}"
+				required="true" label="Obligado a llevar contabilidad">
+				<f:selectItem itemLabel="SI" itemValue="SI" />
+				<f:selectItem itemLabel="NO" itemValue="NO" />
+			</p:selectOneMenu>
+		</div>
+
+		<div class="p-col-12 p-md-4">
+			<h:outputText value="Auto SRI "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:selectOneMenu
+				value="#{beanMantendorFactEmpresa.entidadRegistrar.lEnvioAutomaticoSRI}"
+				required="true" label="Auto SRI">
+				<f:selectItem itemLabel="SI" itemValue="S" />
+				<f:selectItem itemLabel="NO" itemValue="N" />
+			</p:selectOneMenu>
+		</div>
+
+		<div class="p-col-12 p-md-12">
+			<h:outputText value="Dirección Matriz "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputTextarea placeholder="Dirección Matriz"
+				value="#{beanMantendorFactEmpresa.entidadRegistrar.lDireccion}"
+				required="true" requiredMessage="Debe ingresar la dirección matriz">
+				<f:ajax event="blur" execute="@this" render="mensajes"></f:ajax>
+			</p:inputTextarea>
+		</div>
+
+		<div class="p-col-12 p-md-6">
+			<h:outputText value="Email Remitente "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputText placeholder="Email Remitente"
+				value="#{beanMantendorFactEmpresa.entidadRegistrar.lCuentaRemitente}"
+				id="EmailRemitente" required="true"
+				requiredMessage="Debe ingresar el email del remitente">
+				<f:ajax event="blur" execute="@this" render="mensajes"></f:ajax>
+			</p:inputText>
+		</div>
+
+		<div class="p-col-12 p-md-6">
+			<h:outputText value="Email Copia "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputText placeholder="Email Copia"
+				value="#{beanMantendorFactEmpresa.entidadRegistrar.lCuentaCopia}"
+				id="EmailCopia" required="true"
+				requiredMessage="Debe ingresar el email copia">
+				<f:ajax event="blur" execute="@this" render="mensajes"></f:ajax>
+			</p:inputText>
+		</div>
+
+		<div class="p-col-12 p-md-12">
+			<p:fileUpload listener="#{beanMantendorFactEmpresa.subir}"
+				mode="advanced" dragDropSupport="true" update="@this"
+				process="@this" sizeLimit="1000000" fileLimit="1"
+				allowTypes="/(\.|\/)(gif|jpe?g|png)$/" cancelLabel="Limpiar"
+				uploadLabel="Subir" invalidFileMessage="Archivo no permitido"
+				invalidSizeMessage="El tamaño no es permitido" required="false"
+				label="Escoja" />
+
+		</div>
+
+	</ui:define>
+
+	<ui:define name="CONTROL_FORMULARIO">
+		<p:commandButton value="Registrar" style="margin-bottom:10px;"
+			id="registrar" styleClass="ui-button-rounded"
+			actionListener="#{beanMantendorFactEmpresa.guardarOActualizar}"
+			process="contenedor" update="@form" partialSubmit="true" />
+
+	</ui:define>
+
+	<ui:define name="TITULO_TABLA">#{beanMantendorFactEmpresa.cabeceraTabla}</ui:define>
+
+	<ui:define name="CUERPO_TABLA">
+		<p:dataTable value="#{beanMantendorFactEmpresa.listaEntidades}"
+			var="cargo"
+			emptyMessage="#{beanMantendorFactEmpresa.mensajeTablaVacia}" rows="8"
+			reflow="true" paginator="true" paginatorPosition="bottom"
+			id="tablaDatos" paginatorAlwaysVisible="false">
+
+
+			<p:column headerText="Logo">
+
+				<p:graphicImage rendered="#{cargo.imagenReferencia == null}"
+					name="images/empresa.png" library="pandora-layout" value="#"
+					style="outline: aliceblue; width: 33px; height: 33px; vertical-align: top; border-radius: 50%;" />
+				<o:graphicImage rendered="#{cargo.imagenReferencia != null}"
+					style="outline: aliceblue; width: 33px; height: 33px; vertical-align: top; border-radius: 50%;"
+					value="#{cargo.imagenReferencia}" dataURI="true" id="imagenAvatar" />
+
+				<p:overlayPanel id="imagePanel" for="imagenAvatar" hideEffect="fade"
+					rendered="#{cargo.imagenReferencia != null}">
+					<o:graphicImage
+						style="outline: aliceblue; width: 200px; height: 200px; vertical-align: top; border-radius: 10%;"
+						value="#{cargo.imagenReferencia}" dataURI="true"
+						rendered="#{cargo.imagenReferencia != null}" />
+				</p:overlayPanel>
+			</p:column>
+
+			<p:column headerText="Nombre/Razón Social">
+				<h:outputText value="#{cargo.lRazonSocial}" />
+			</p:column>
+
+			<p:column headerText="RUC">
+				<h:outputText value="#{cargo.lIdentificacion}" />
+			</p:column>
+
+			<p:column headerText="Cuenta Remitente">
+				<p:tooltip for="emailCol" value="#{cargo.lCuentaRemitente}"
+					position="top" />
+				<p:commandLink id="emailCol">
+					<span class="fa-stack fa-lg"> <i
+						class="fa fa-circle fa-stack-2x"></i> <i
+						class="fa fa-envelope-o fa-stack-1x fa-inverse" aria-hidden="true"></i>
+					</span>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="Cuenta Copia">
+				<p:tooltip for="emailCol2" value="#{cargo.lCuentaRemitente}"
+					position="top" />
+				<p:commandLink id="emailCol2">
+					<span class="fa-stack fa-lg"> <i
+						class="fa fa-circle fa-stack-2x"></i> <i
+						class="fa fa-envelope-o fa-stack-1x fa-inverse" aria-hidden="true"></i>
+					</span>
+				</p:commandLink>
+			</p:column>
+
+
+			<p:column headerText="Estado">
+				<h:outputText
+					value="#{cargo.estado eq beanMantendorFactEmpresa.estadoActivo?'ACTIVO':'INACTIVO'}" />
+			</p:column>
+
+
+			<p:column headerText="Fecha Registro">
+				<h:outputText value="#{cargo.fechaRegistro}">
+					<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+						timeZone="#{beanMantendorFactEmpresa.currentTimeZone}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Acciones">
+				<div class="p-grid ui-fluid">
+					<div class="p-col-12 p-lg-3">
+						<p:commandLink title="Cambiar Estado"
+							actionListener="#{beanMantendorFactEmpresa.cambiarEstado}"
+							update="@form" process="@this">
+
+							<i class="fa fa-exchange Fs20 BoldGray DispBlock"> </i>
+							<f:attribute
+								name="#{beanMantendorFactEmpresa.nombreAtributoCambioEstado}"
+								value="#{cargo}"></f:attribute>
+
+							<p:confirm header="Confirmación"
+								message="Seguro que desea realizar esta operación?"
+								icon="ui-icon-alert" />
+						</p:commandLink>
+					</div>
+
+					<div class="p-col-12 p-lg-3">
+						<p:commandLink title="Actualizar"
+							actionListener="#{beanMantendorFactEmpresa.actualizarEntidad}"
+							update="@([id$=dialogoMantenimiento])"
+							oncomplete="PF('dialogoMantenimiento').show();" process="@this">
+							<i class="fa fa-edit Fs20 BoldGray DispBlock"> </i>
+							<f:attribute
+								name="#{beanMantendorFactEmpresa.nombreAtributoCambioEstado}"
+								value="#{cargo}"></f:attribute>
+						</p:commandLink>
+					</div>
+
+					<div class="p-col-12 p-lg-3">
+						<p:commandLink title="Sucursales"
+							actionListener="#{beanMantendorFactEmpresa.sucursal}"
+							update="@([id$=dialogoSucursales]), @([id$=regSucursales])"
+							oncomplete="PF('dialogoSucursales').show();" process="@this">
+							<i class="fa fa-shopping-basket"> </i>
+							<f:attribute
+								name="#{beanMantendorFactEmpresa.nombreAtributoCambioEstado}"
+								value="#{cargo}"></f:attribute>
+						</p:commandLink>
+					</div>
+				</div>
+
+			</p:column>
+
+		</p:dataTable>
+
+	</ui:define>
+
+	<ui:define name="form_comp_visual">
+
+
+	</ui:define>
+
+	<ui:define name="cab_dialogo">
+		#{beanMantendorFactEmpresa.cabeceraDialogo}
+	</ui:define>
+
+	<ui:define name="datos_dialogo">
+
+
+
+		<div class="p-col-12 p-md-6">
+			<h:outputText value="Nombre/Razón Social "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputText placeholder="Nombre/Razón Social "
+				value="#{beanMantendorFactEmpresa.entidadRegistrar.lRazonSocial}"
+				id="RazonSocialDialogo" onblur="ChangeCase(this);" required="true"
+				requiredMessage="Debe ingresar la razón social de la empresa">
+				<f:ajax event="blur" execute="@this" render="mensajeDialogo"></f:ajax>
+			</p:inputText>
+		</div>
+
+		<div class="p-col-12 p-md-6">
+			<h:outputText value="Identificación "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputMask mask="9?999999999999" maxlength="13"
+				placeholder="Identificación"
+				value="#{beanMantendorFactEmpresa.entidadRegistrar.lIdentificacion}"
+				required="true" id="IdentificacionDialogo"
+				requiredMessage="Debe ingresar el ruc">
+				<f:ajax event="blur" execute="@this" render="mensajeDialogo"></f:ajax>
+			</p:inputMask>
+		</div>
+
+		<div class="p-col-12 p-md-4">
+			<h:outputText value="Resolución Nro "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputText placeholder="Contribuyente Especial Resolución Nro"
+				value="#{beanMantendorFactEmpresa.entidadRegistrar.numeroContribuyenteEspecial}"
+				id="contributenyente">
+			</p:inputText>
+		</div>
+
+		<div class="p-col-12 p-md-4">
+			<h:outputText value="Obligado Contabilidad"
+				style="font-size: 10px; font-weight: bold;" />
+			<p:selectOneMenu
+				value="#{beanMantendorFactEmpresa.entidadRegistrar.obligadoLlevarContabilidad}"
+				required="true" label="Obligado a llevar contabilidad">
+				<f:selectItem itemLabel="SI" itemValue="SI" />
+				<f:selectItem itemLabel="NO" itemValue="NO" />
+			</p:selectOneMenu>
+		</div>
+
+		<div class="p-col-12 p-md-4">
+			<h:outputText value="Auto SRI "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:selectOneMenu
+				value="#{beanMantendorFactEmpresa.entidadRegistrar.lEnvioAutomaticoSRI}"
+				required="true" label="Auto SRI">
+				<f:selectItem itemLabel="SI" itemValue="S" />
+				<f:selectItem itemLabel="NO" itemValue="N" />
+			</p:selectOneMenu>
+		</div>
+
+		<div class="p-col-12 p-md-12">
+			<h:outputText value="Dirección Matriz"
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputTextarea placeholder="Dirección Matriz"
+				value="#{beanMantendorFactEmpresa.entidadRegistrar.lDireccion}"
+				required="true" requiredMessage="Debe ingresar la dirección matriz">
+				<f:ajax event="blur" execute="@this" render="mensajes"></f:ajax>
+			</p:inputTextarea>
+		</div>
+
+		<div class="p-col-12 p-md-6">
+			<h:outputText value="Email Remitente"
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputText placeholder="Email Remitente"
+				value="#{beanMantendorFactEmpresa.entidadRegistrar.lCuentaRemitente}"
+				id="EmailRemitenteDialogo" required="true"
+				requiredMessage="Debe ingresar el email del remitente">
+				<f:ajax event="blur" execute="@this" render="mensajeDialogo"></f:ajax>
+			</p:inputText>
+		</div>
+
+		<div class="p-col-12 p-md-6">
+			<h:outputText value="Email Copia"
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputText placeholder="Email Copia"
+				value="#{beanMantendorFactEmpresa.entidadRegistrar.lCuentaCopia}"
+				id="EmailCopiaDialogo" required="true"
+				requiredMessage="Debe ingresar el email copia">
+				<f:ajax event="blur" execute="@this" render="mensajeDialogo"></f:ajax>
+			</p:inputText>
+		</div>
+
+		<div class="p-col-12 p-md-12">
+			<p:fileUpload listener="#{beanMantendorFactEmpresa.subir}"
+				mode="advanced" dragDropSupport="true" update="@this"
+				process="@this" sizeLimit="1000000" fileLimit="1"
+				allowTypes="/(\.|\/)(gif|jpe?g|png)$/" cancelLabel="Limpiar"
+				uploadLabel="Subir" invalidFileMessage="Archivo no permitido"
+				invalidSizeMessage="El tamaño no es permitido" required="false"
+				label="Escoja" />
+		</div>
+
+	</ui:define>
+
+	<ui:define name="control_formulario_dialogo">
+		<p:commandButton value="Actualizar" style="margin-bottom:10px;"
+			id="actualizar" styleClass="ui-button-rounded"
+			actionListener="#{beanMantendorFactEmpresa.guardarOActualizar}"
+			process="PanelActualizar"
+			update="@([id$=mensajes]), PanelActualizar, @([id$=tablaDatos])"
+			oncomplete="PF('dialogoMantenimiento').hide();" partialSubmit="true" />
+	</ui:define>
+
+	<ui:define name="control_dialogo">
+		<p:ajax event="close" update="PanelActualizar"
+			listener="#{beanMantendorFactEmpresa.eventoControlCierreDialogo}" />
+	</ui:define>
+
+
+	<ui:define name="componentes_visuales_sin_form">
+		<h:form id="formSucursal">
+			<p:dialog widgetVar="dialogoSucursales" modal="true" minWidth="1024"
+				id="dialogoSucursales" width="55%" showHeader="true">
+				<f:facet name="header">
+					<h:outputText
+						value="Sucursales Empresa: #{beanMantendorFactEmpresa.entidadRegistrar.lRazonSocial}" />
+				</f:facet>
+				<p:messages globalOnly="false" id="mensajeDialogoSucursal"></p:messages>
+
+
+				<p:dataTable id="regSucursales" var="sucur" scrollRows="4"
+					value="#{beanMantendorFactEmpresa.lListaEstablecimiento}"
+					emptyMessage="No existen sucursales registradas">
+					<p:column headerText="Descripición" style="text-align: center;">
+						<h:outputText value="#{sucur.nombre}" />
+					</p:column>
+					<p:column headerText="Dirección" style="text-align: center;">
+						<h:outputText value="#{sucur.direccion}" />
+					</p:column>
+					<p:column headerText="Código" style="text-align: center;">
+						<h:outputText value="#{sucur.codigo}" />
+					</p:column>
+				</p:dataTable>
+			</p:dialog>
+
+		</h:form>
+
+
+
+	</ui:define>
+
+
+
+
+
+
+
+</ui:composition>

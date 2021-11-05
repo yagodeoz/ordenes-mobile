@@ -1,0 +1,49 @@
+<ion-header class="osahan-nav">
+  <ion-toolbar>
+     <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+     </ion-buttons>
+     <ion-title>Flujo de Cobros
+     </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding order-list-page" color="light">
+  <ion-searchbar class="p-0 mb-2" placeholder="Buscar Nombre..."  #buscadorCliente
+                 [animated]="true" (keyup.enter)="buscarCliente(buscadorCliente.value)"
+  ></ion-searchbar>
+
+    <ion-searchbar class="p-0 mb-2" placeholder="Buscar registro fiscal..."  #buscadorClienteRF
+                   [animated]="true" (keyup.enter)="buscarClienteRF(buscadorClienteRF.value)"
+    ></ion-searchbar>
+
+   <div *ngIf="listaClientes">
+  <div   class="d-flex p-3 shop-cart-item bg-white mb-2"
+   *ngFor=" let item of listaClientes "
+  >
+     <div class="shop-cart-left">
+        <img alt="img" class="not-found-img" src="assets/cliente/cliente.png">
+     </div>
+     <div class="shop-cart-right">
+        <h6 class="font-weight-bold text-dark mb-2 price">{{item.IDENTIFICACION}}
+           <span class="regular-price text-secondary font-weight-normal">{{item.CODIGOCIUDAD}}</span></h6>
+           <div class="mb-2 text-dark">{{item.NOMBRECOMPLETO}}</div>
+           <div class="mb-2 text-dark">{{item.DIRECCION}}</div>
+        <div class="small text-gray-500 d-flex align-items-center justify-content-between">
+           <small class="text-secondary text-dark">{{item.CODCLIENTE}}</small>
+           <div class="input-group shop-cart-value">
+               <span class="input-group-btn"><button   class="btn btn-sm" type="button" (click)="procesarClienteBanco(item)">
+                    <ion-icon name="card"></ion-icon>
+               </button></span>
+               <input type="text" max="10" min="1" value="" class="form-control border-form-control form-control-sm input-number" name="quant[1]">
+               <span class="input-group-btn">
+                  <button class="btn btn-sm" type="button" (click)="procesarClienteEfectivo(item)">
+                       <ion-icon name="logo-usd"></ion-icon>
+                  </button>
+              </span>
+           </div>
+        </div>
+     </div>
+  </div>
+   </div>
+
+</ion-content>

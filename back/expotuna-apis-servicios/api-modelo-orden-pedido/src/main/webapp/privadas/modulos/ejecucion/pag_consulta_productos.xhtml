@@ -1,0 +1,264 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template_consulta.xhtml"
+	xmlns:o="http://omnifaces.org/ui">
+
+
+
+	<ui:define name="TOOLBAR">
+		<p:toolbar styleClass="p-mb-4">
+			<p:toolbarGroup name="right">
+				<p:commandButton value="Sincronizar" icon="pi pi-download"
+					styleClass="ui-button-success" ajax="false">
+					<p:dataExporter type="pdf" target="dt-products" fileName="products" />
+				</p:commandButton>
+
+				<p:commandButton value="Export" icon="pi pi-upload"
+					styleClass="ui-button-help" ajax="false">
+					<p:dataExporter type="pdf" target="dt-products" fileName="products" />
+				</p:commandButton>
+			</p:toolbarGroup>
+		</p:toolbar>
+
+	</ui:define>
+
+	<ui:define name="TABLA">
+
+		<p:dataTable id="dt-products" widgetVar="dtProducts" var="product"
+			value="#{beanMantenedorProducto.listaEntidades}" reflow="true"
+			styleClass="products-table" paginator="true" rows="10"
+			paginatorPosition="bottom"
+			emptyMessage="No existen productos registrados">
+
+			<f:facet name="header">
+				<div class="products-table-header">
+					<span style="font-weight: bold">Buscar Producto por Nombre</span> <span
+						class="filter-container ui-input-icon-left"> <i
+						class="pi pi-search"></i> <p:inputText id="globalFilter"
+							 placeholder="Search" value="#{beanMantenedorProducto.filProducto}"
+							
+							>
+							<p:ajax event="keyup"  update="@([id$=dt-products])"
+							process="@this"  listener="#{beanMantenedorProducto.buscarProductos}"/>
+							</p:inputText>
+					</span>
+				</div>
+			</f:facet>
+
+
+
+
+			<p:column exportable="false">
+				<p:rowToggler />
+			</p:column>
+
+			<p:column headerText="Código" sortBy="#{product.lCodigoProducto}"
+				style="text-align: center;" filterBy="#{product.lCodigoProducto}">
+				<h:outputText value="#{product.lCodigoProducto}" />
+			</p:column>
+			<p:column headerText="Descripción" sortBy="#{product.lDescripcion}"
+				style="text-align: center;" filterBy="#{product.lDescripcion}">
+				<h:outputText value="#{product.lDescripcion}" />
+			</p:column>
+			<p:column headerText="Nombre" sortBy="#{product.lNombre}"
+				style="text-align: center;" filterBy="#{product.lNombre}">
+				<h:outputText value="#{product.lNombre}" />
+			</p:column>
+
+			<p:column headerText="Categoría" style="text-align: center;"
+				sortBy="#{product.tipoProducto.lTipoProducto}"
+				filterBy="#{product.tipoProducto.lTipoProducto}">
+				<h:outputText value="#{product.tipoProducto.lTipoProducto}" />
+			</p:column>
+
+			<p:column headerText="Imagen Principal" exportable="false"
+				style="text-align: center;">
+
+				<p:graphicImage rendered="#{product.imagenReferencia == null}"
+					name="images/dashboard/asset-step-2.png" library="pandora-layout"
+					value="#"
+					style="outline: aliceblue; width: 33px; height: 33px; vertical-align: top; border-radius: 50%;"
+					styleClass="product-image" />
+
+				<o:graphicImage rendered="#{product.imagenReferencia != null}"
+					style="outline: aliceblue; width: 33px; height: 33px; vertical-align: top; border-radius: 50%;"
+					value="#{product.imagenReferencia}" dataURI="true"
+					id="imagenAvatar" styleClass="product-image" />
+
+				<p:overlayPanel id="imagePanel" for="imagenAvatar" hideEffect="fade"
+					rendered="#{product.imagenReferencia != null}">
+					<o:graphicImage
+						style="outline: aliceblue; width: 200px; height: 200px; vertical-align: top; border-radius: 10%;"
+						value="#{product.imagenReferencia}" dataURI="true"
+						rendered="#{product.imagenReferencia != null}" />
+				</p:overlayPanel>
+
+			</p:column>
+
+			<p:column headerText="Lista Precios" exportable="false"
+				style="text-align: center;">
+
+				<p:commandButton icon="pi pi-dollar" update="@([id$=listaPrecio])"
+					oncomplete="PF('listaPrecio').show()"
+					styleClass="edit-button rounded-button ui-button-success"
+					process="@this"
+					actionListener="#{beanMantenedorProducto.obtenerListaPrecio}">
+					<f:attribute
+						name="#{beanMantenedorProducto.nombreAtributoCambioEstado}"
+						value="#{product}"></f:attribute>
+				</p:commandButton>
+
+			</p:column>
+
+
+			<p:column headerText="Detalle Stock" exportable="false"
+				style="text-align: center;">
+
+				<p:commandButton class="ui-button-warning rounded-button"
+					icon="pi pi-list" process="@this" oncomplete="PF('stock').show()"
+					update="@([id$=stock])"
+					actionListener="#{beanMantenedorProducto.obtenerStock}">
+					<f:attribute
+						name="#{beanMantenedorProducto.nombreAtributoCambioEstado}"
+						value="#{product}"></f:attribute>
+				</p:commandButton>
+
+			</p:column>
+
+
+			<p:rowExpansion>
+				<div class="orders-subtable">
+					<h5>Detalles de producto #{product.lNombre}</h5>
+					<p:dataTable var="detalle" value="#{product.listaDetalles}"
+						reflow="true">
+						<p:column headerText="Imagen Principal" exportable="false"
+							style="text-align: center;">
+
+							<p:graphicImage rendered="#{detalle.imagenReferencia == null}"
+								name="images/dashboard/asset-step-2.png"
+								library="pandora-layout" value="#"
+								style="outline: aliceblue; width: 33px; height: 33px; vertical-align: top; border-radius: 50%;"
+								styleClass="product-image" />
+
+							<o:graphicImage rendered="#{detalle.imagenReferencia != null}"
+								style="outline: aliceblue; width: 33px; height: 33px; vertical-align: top; border-radius: 50%;"
+								value="#{detalle.imagenReferencia}" dataURI="true"
+								id="imagenAvatar" styleClass="product-image" />
+
+							<p:overlayPanel id="imagePanel" for="imagenAvatar"
+								hideEffect="fade" rendered="#{detalle.imagenReferencia != null}">
+								<o:graphicImage
+									style="outline: aliceblue; width: 200px; height: 200px; vertical-align: top; border-radius: 10%;"
+									value="#{detalle.imagenReferencia}" dataURI="true"
+									rendered="#{detalle.imagenReferencia != null}" />
+							</p:overlayPanel>
+
+						</p:column>
+
+						<p:column headerText="Descripción" style="text-align: center;"
+							sortBy="#{detalle.descripcionDetalle}">
+							<h:outputText value="#{detalle.descripcionDetalle}" />
+						</p:column>
+
+						<p:column headerText="Auxiliar 1" style="text-align: center;"
+							sortBy="#{detalle.valorAuxiliar1}">
+							<h:outputText value="#{detalle.valorAuxiliar1}" />
+						</p:column>
+
+						<p:column headerText="Auxiliar 2" style="text-align: center;"
+							sortBy="#{detalle.valorAuxiliar2}">
+							<h:outputText value="#{detalle.valorAuxiliar2}" />
+						</p:column>
+
+
+						<p:column headerText="Auxiliar 3" style="text-align: center;"
+							sortBy="#{detalle.valorAuxiliar3}">
+							<h:outputText value="#{detalle.valorAuxiliar3}" />
+						</p:column>
+
+
+
+
+					</p:dataTable>
+				</div>
+			</p:rowExpansion>
+		</p:dataTable>
+
+	</ui:define>
+
+	<ui:define name="DIALOGO">
+
+		<p:dialog showEffect="fade" modal="true" widgetVar="listaPrecio"
+			id="listaPrecio" responsive="true" minWidth="1024" height="300"
+			width="55%"
+			header="Lista Precios para el producto : #{beanMantenedorProducto.entidadRegistrar.lNombre}">
+
+			<p:dataTable id="dt-precio" widgetVar="dtPrecio" var="precio"
+				value="#{beanMantenedorProducto.listasPrecio}" reflow="true"
+				styleClass="products-table" paginator="true" rows="10"
+				paginatorPosition="bottom"
+				emptyMessage="No existen listas de productos registrados">
+
+				<p:column headerText="Auxiliar 1" style="text-align: center;">
+					<h:outputText value="#{precio.nombreListaPrecio}" />
+				</p:column>
+
+				<p:column headerText="Precio 1" style="text-align: center;">
+					<h:outputText value="#{precio.precio1}" />
+				</p:column>
+
+				<p:column headerText="Precio 2" style="text-align: center;">
+					<h:outputText value="#{precio.precio2}" />
+				</p:column>
+
+
+			</p:dataTable>
+
+		</p:dialog>
+
+		<p:dialog showEffect="fade" modal="true" responsive="true">
+
+		</p:dialog>
+
+
+		<p:dialog showEffect="fade" modal="true" widgetVar="stock" id="stock"
+			responsive="true" minWidth="1024" height="300" width="55%"
+			header="Stock para el producto : #{beanMantenedorProducto.entidadRegistrar.lNombre}">
+
+			<p:dataTable id="dt-stock" widgetVar="dtStock" var="stock"
+				value="#{beanMantenedorProducto.stockProducto}" reflow="true"
+				styleClass="products-table" paginator="true" rows="10"
+				paginatorPosition="bottom"
+				emptyMessage="No existen registrado el stock de productos">
+
+				<p:column headerText="Descripción" style="text-align: center;">
+					<h:outputText value="#{stock.descripcionStock}" />
+				</p:column>
+
+				<p:column headerText="Código Sucursal" style="text-align: center;">
+					<h:outputText value="#{stock.codigoSucursal}" />
+				</p:column>
+
+				<p:column headerText="Código Bodega" style="text-align: center;">
+					<h:outputText value="#{stock.nombreBodega}" />
+				</p:column>
+
+|				<p:column headerText="Cantidad Entera" style="text-align: center;">
+					<h:outputText value="#{stock.cantidadEntera}" />
+				</p:column>
+				<p:column headerText="Cantidad Décimal" style="text-align: center;">
+					<h:outputText value="#{stock.cantidadDecimal}" />
+				</p:column>
+			</p:dataTable>
+
+		</p:dialog>
+
+
+
+
+	</ui:define>
+
+</ui:composition>

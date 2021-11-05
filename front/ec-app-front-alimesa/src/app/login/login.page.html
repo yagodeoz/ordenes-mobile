@@ -1,0 +1,39 @@
+<ion-header class="osahan-nav">
+  <ion-toolbar>
+     <ion-title>{{titulo}}
+     </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding shop-cart-page" color="light">
+  <div class="card mb-2" style="margin-top: 50px;">
+     <div class="border-bottom text-center p-3">
+        <img src="../../assets/login/principal.png" height="82" width="224"/></div>
+     <div class="p-3">
+        <form class="card" >
+           <ion-list lines="full" class="ion-no-margin ion-no-padding">
+              <ion-item>
+                 <ion-label position="stacked">
+                    {{formUsuario}}
+                    <ion-text color="danger">*</ion-text>
+                 </ion-label>
+                 <ion-input placeholder="{{formUsuarioPH}}" required type="text" autocomplete="off" disable-cut-copy-paste [(ngModel)]="postData.username" name="username"></ion-input>
+              </ion-item>
+           </ion-list>
+           <ion-list lines="full" class="ion-no-margin ion-no-padding">
+              <ion-item>
+                 <ion-label position="stacked">
+                    {{formClave}}
+                    <ion-text color="danger">*</ion-text>
+                 </ion-label>
+                 <ion-input placeholder="{{formClavePH}}" required type="password" autocomplete="off" disable-cut-copy-paste [(ngModel)]="postData.password" name="password"
+                            (keyup.enter)="login()"
+                 ></ion-input>
+              </ion-item>
+           </ion-list>
+        </form>
+     </div>
+     <div class="p-3 border-top">
+        <ion-button (click)="login()" expand="block" type="submit" class="ion-no-margin">{{formBtn}}</ion-button>
+     </div>
+  </div>
+</ion-content>

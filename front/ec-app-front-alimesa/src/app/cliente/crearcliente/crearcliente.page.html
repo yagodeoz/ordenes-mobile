@@ -1,0 +1,54 @@
+<ion-header class="osahan-nav">
+  <ion-toolbar>
+     <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+     </ion-buttons>
+     <ion-title>Editar Cliente</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding" color="light">
+  <div class="card">
+     <form >
+        <ion-list lines="full" class="ion-no-margin ion-no-padding">
+           <ion-item>
+              <ion-label position="stacked">
+                 Nombre
+                 <ion-text color="danger">*</ion-text>
+              </ion-label>
+              <ion-input placeholder="Ingrese nombre" required type="text" name="nombre"
+              ></ion-input>
+           </ion-item>
+           <ion-item>
+              <ion-label position="stacked">
+                 Teléfono
+                 <ion-text color="danger">*</ion-text>
+              </ion-label>
+              <ion-input placeholder="Ingrese Teléfono" required type="number"
+                         name="telefono"
+              ></ion-input>
+           </ion-item>
+           <ion-item>
+              <ion-label position="stacked">
+                 Email 
+                 <ion-text color="danger">*</ion-text>
+              </ion-label>
+              <ion-input placeholder="Ingrese el email" required type="mail"
+                         name="email"
+              ></ion-input>
+           </ion-item>
+           <ion-item>
+              <ion-label position="stacked">
+                 Dirección
+                 <ion-text color="danger">*</ion-text>
+              </ion-label>
+              <ion-input placeholder="Ingrese la dirección" required type="text"
+                          name="direccion"
+              ></ion-input>
+           </ion-item>
+        </ion-list>
+        <div class="ion-padding">
+           <ion-button (click)="procesarEdicion()" expand="block" type="submit" class="ion-no-margin">Guardar</ion-button>
+        </div>
+     </form>
+  </div>
+</ion-content>

@@ -1,0 +1,155 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<style type="text/css">
+.ui-outputlabel {
+	display: block;
+	margin: 1em 0
+}
+
+.ui-selectonemenu, .ui-autocomplete {
+	margin-bottom: 1em;
+}
+
+.ui-slider {
+	margin-bottom: 2em;
+}
+
+.ui-widget, .ui-widget .ui-widget {
+	font-size: 12px;
+}
+
+body .ui-widget-content {
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    font-size: 10px;
+}
+body .ui-inputfield {
+    font-size: 10px;
+}
+
+body .ui-datatable .ui-datatable-data > tr td {
+    padding: 0.2em;
+    text-align: center;
+}
+
+body .ui-widget-header {
+    font-size: 10px;
+}
+
+</style>
+
+		<script>
+function ChangeCase(elem) {
+		elem.value = elem.value.toUpperCase();
+	}
+</script>
+
+	</ui:define>
+
+	<ui:define name="title">Vista -> #{testParseMenu.opcionSeleccionada.moduloPadre.descripcion} - #{testParseMenu.opcionSeleccionada.descripcion} </ui:define>
+
+	<ui:define name="viewname">
+		<li>#{testParseMenu.opcionSeleccionada.moduloPadre.descripcion}</li>
+		<li><i class="fa fa-angle-right"></i></li>
+		<li><p:link outcome="#{testParseMenu.opcionSeleccionada.accion}">#{testParseMenu.opcionSeleccionada.descripcion}</p:link>
+		</li>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form id="formulario">
+			<p:messages globalOnly="false" id="mensajes" closable="true"></p:messages>
+			<div class="p-grid ui-fluid">
+				<div class="p-col-12 p-lg-5">
+					<div class="p-grid">
+						<div class="p-col-12">
+							<p:outputPanel id="contenedor">
+								<div class="card card-w-title">
+									<h1>
+										<ui:insert name="TITULO_FORMULARIO"></ui:insert>
+									</h1>
+									<div class="p-grid">
+										<ui:insert name="CUERPO_FORMULARIO">
+										</ui:insert>
+									</div>
+
+									<div class="p-col-12" style="text-align: center">
+										<ui:insert name="CONTROL_FORMULARIO">
+										</ui:insert>
+									</div>
+								</div>
+							</p:outputPanel>
+						</div>
+					</div>
+				</div>
+
+				<div class="p-col-12 p-lg-7" >
+					<div class="p-grid">
+						<div class="p-col-12">
+							<div class="card card-w-title">
+								<h1>
+									<ui:insert name="TITULO_TABLA"></ui:insert>
+								</h1>
+								<ui:insert name="CUERPO_TABLA"></ui:insert>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+				closeOnEscape="true" responsive="true">
+				<p:commandButton value="Si" type="button"
+					styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+			</p:confirmDialog>
+
+		</h:form>
+
+
+		<h:form id="formulario_comp_visual">
+			<ui:insert name="form_comp_visual">
+
+			</ui:insert>
+		</h:form>
+
+		<h:form id="formulario_actualizacion">
+			<p:dialog widgetVar="dialogoMantenimiento" modal="true"
+				minWidth="1024" id="dialogoMantenimiento" width="55%"
+				showHeader="true">
+				<f:facet name="header">
+					<ui:insert name="cab_dialogo">
+					</ui:insert>
+				</f:facet>
+				<p:messages globalOnly="false" id="mensajeDialogo"></p:messages>
+				<p:outputPanel id="PanelActualizar">
+					<div class="card card-w-title">
+						<div class="p-grid ui-fluid">
+							<ui:insert name="datos_dialogo">
+							</ui:insert>
+							<div class="p-col-12 p-md-12" style="text-align: center">
+								<ui:insert name="control_formulario_dialogo">
+								</ui:insert>
+							</div>
+						</div>
+					</div>
+				</p:outputPanel>
+				<ui:insert name="control_dialogo">
+				</ui:insert>
+			</p:dialog>
+		</h:form>
+
+
+		<ui:insert name="componentes_visuales_sin_form">
+
+		</ui:insert>
+
+	</ui:define>
+
+
+</ui:composition>

@@ -1,0 +1,59 @@
+<ion-header class="osahan-nav">
+   <ion-toolbar>
+      <ion-buttons slot="start">
+         <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Sincronización Datos</ion-title>
+   </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding" color="light">
+
+   <div class="card order-item-card mb-2">
+      <div class="d-flex align-items-center p-3">
+          <div class="overflow-hidden ml-2">
+              <h6 class="font-weight-bold text-dark mb-0 text-truncate">Descarga Datos:</h6>
+              <div class="text-truncate text-primary">Catálogos, Cobros, Despachos</div>              
+          </div>
+      </div>
+      <div class="p-3">
+          <ion-button class="button-block mb-0 mx-0"  color="danger" (click)='descargarCatalogos()' >Descargar</ion-button>          
+      </div>
+  </div>
+
+  <div class="card order-item-card mb-2">
+      <div class="d-flex align-items-center p-3">
+         <div class="overflow-hidden ml-2">
+           <h6 class="font-weight-bold text-dark mb-0 text-truncate">Enviar Órdenes:</h6>
+           <div class="text-truncate text-primary">Cantidad órdenes por enviar: {{ordenesSinReplicar}}</div>           
+         </div>
+      </div>
+      <div class="p-3">
+         <ion-button class="button-block mb-0 mx-0"  color="primary" (click)='subirOrdenes()' >Subir Órdenes</ion-button>          
+      </div>
+   </div>
+
+   <div class="card order-item-card mb-2">
+      <div class="d-flex align-items-center p-3">
+         <div class="overflow-hidden ml-2">
+           <h6 class="font-weight-bold text-dark mb-0 text-truncate">Enviar Cobros:</h6>
+           <div class="text-truncate text-primary">Cantidad cobros por enviar: {{comprobanteSinReplicar}}</div>           
+         </div>
+      </div>
+      <div class="p-3">
+         <ion-button class="button-block mb-0 mx-0"  color="primary" (click)='subirCobros()' >Subir Cobros</ion-button>          
+      </div>
+   </div>
+
+   <div class="card order-item-card mb-2">
+      <div class="d-flex align-items-center p-3">
+         <div class="overflow-hidden ml-2">
+           <h6 class="font-weight-bold text-dark mb-0 text-truncate">Enviar Despachos:</h6>
+           <div class="text-truncate text-primary">Cantidad despachos por enviar: {{despachosSinReplicar}}</div>           
+         </div>
+      </div>
+      <div class="p-3">
+         <ion-button class="button-block mb-0 mx-0"  color="primary" (click)='subirDespacho()' >Subir despachos</ion-button>          
+      </div>
+   </div>
+
+</ion-content>

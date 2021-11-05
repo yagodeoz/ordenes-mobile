@@ -1,0 +1,168 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template_consulta.xhtml"
+	xmlns:o="http://omnifaces.org/ui">
+
+
+
+	<ui:define name="TOOLBAR">
+		<p:toolbar styleClass="p-mb-4">
+			<p:toolbarGroup name="right">
+				<p:commandButton value="Sincronizar" icon="pi pi-download"
+					styleClass="ui-button-success" ajax="false">
+					<p:dataExporter type="pdf" target="dt-products" fileName="products" />
+				</p:commandButton>
+
+				<p:commandButton value="Export" icon="pi pi-upload"
+					styleClass="ui-button-help" ajax="false">
+					<p:dataExporter type="pdf" target="dt-products" fileName="products" />
+				</p:commandButton>
+			</p:toolbarGroup>
+		</p:toolbar>
+
+	</ui:define>
+
+	<ui:define name="TABLA">
+
+		<p:dataTable id="dt-products" widgetVar="dtProducts" var="product"
+			value="#{beanMantenedorDespacho.listaEntidades}" reflow="true"
+			styleClass="products-table" paginator="true" rows="10"
+			paginatorPosition="bottom"
+			emptyMessage="No existen clientes registrados">
+
+			<f:facet name="header">
+				<div class="products-table-header">
+					<span style="font-weight: bold">Buscar Ord. por Nombre</span> <span
+						class="filter-container ui-input-icon-left"> <i
+						class="pi pi-search"></i> <p:inputText id="globalFilter"
+							placeholder="Search" value="#{beanMantenedorDespacho.filCriterio}">
+							<p:ajax event="keyup" update="@([id$=dt-products])"
+								process="@this"
+								listener="#{beanMantenedorDespacho.buscarRegistrosCriterio}" />
+						</p:inputText>
+					</span>
+				</div>
+			</f:facet>
+
+			<p:column exportable="false">
+				<p:rowToggler />
+			</p:column>
+
+			<p:column headerText="Registro Fiscal"
+				sortBy="#{product.identificacionComprador}"
+				style="text-align: center;"
+				filterBy="#{product.identificacionComprador}">
+				<h:outputText value="#{product.identificacionComprador}" />
+			</p:column>
+			<p:column headerText="Razón Social"
+				sortBy="#{product.razonSocialComprador}" style="text-align: center;"
+				filterBy="#{product.razonSocialComprador}">
+				<h:outputText value="#{product.razonSocialComprador}" />
+			</p:column>
+
+
+			<p:column headerText="Dirección"
+				sortBy="#{product.direccionComprador}" style="text-align: center;"
+				filterBy="#{product.direccionComprador}">
+				<h:outputText value="#{product.direccionComprador}" />
+			</p:column>
+
+			<p:column headerText="Secuencia de Orden" style="text-align: center;"
+				sortBy="#{product.id}" filterBy="#{product.id}">
+				<h:outputText value="#{product.id}" />
+			</p:column>
+
+			<p:column headerText="Número de Orden" style="text-align: center;"
+				sortBy="#{product.numeroOden}" filterBy="#{product.numeroOden}">
+				<h:outputText value="#{product.numeroOden}" />
+			</p:column>
+			
+			<p:column headerText="Estado" style="text-align: center;"
+				sortBy="#{product.estadoProceso}" filterBy="#{product.estadoProceso}">
+				<h:outputText value="#{product.estadoProceso}" />
+			</p:column>
+
+			<p:column headerText="Fecha Emisioón" style="text-align: center;">
+				<h:outputText value="#{product.fechaEmision}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Subtotal" style="text-align: center;">
+				<h:outputText value="#{product.totalSinImpuestos}">
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Total" style="text-align: center;">
+				<h:outputText value="#{product.importeTotal}">
+				</h:outputText>
+			</p:column>
+
+
+			<p:rowExpansion>
+				<div class="orders-subtable">
+					<h5>Detalles de producto Orden: #{product.numeroOden}</h5>
+					<p:dataTable var="detalle" value="#{product.listaDetallesDespacho}"
+						reflow="true">
+						<p:column headerText="Imagen Principal" exportable="false"
+							style="text-align: center;">
+							<p:graphicImage name="images/dashboard/asset-step-2.png"
+								library="pandora-layout" value="#"
+								style="outline: aliceblue; width: 33px; height: 33px; vertical-align: top; border-radius: 50%;"
+								styleClass="product-image" />
+						</p:column>
+
+						<p:column headerText="Cantidad" style="text-align: center;"
+							sortBy="#{detalle.cantidad}">
+							<h:outputText value="#{detalle.cantidad}" />
+						</p:column>
+
+						<p:column headerText="Código Producto" style="text-align: center;"
+							sortBy="#{detalle.codigoPrincipal}">
+							<h:outputText value="#{detalle.codigoPrincipal}" />
+						</p:column>
+
+						<p:column headerText="Producto" style="text-align: center;"
+							sortBy="#{detalle.codigoAuxiliar}">
+							<h:outputText value="#{detalle.codigoAuxiliar}" />
+						</p:column>
+
+						<p:column headerText="Descripción" style="text-align: center;"
+							sortBy="#{detalle.descripcion}">
+							<h:outputText value="#{detalle.descripcion}" />
+						</p:column>
+
+						<p:column headerText="Precio Unitario" style="text-align: center;"
+							sortBy="#{detalle.precioUnitario}">
+							<h:outputText value="#{detalle.precioUnitario}" />
+						</p:column>
+
+						<p:column headerText="Sub Total" style="text-align: center;"
+							sortBy="#{detalle.precioTotalSinImpuesto}">
+							<h:outputText value="#{detalle.precioTotalSinImpuesto}" />
+						</p:column>
+
+
+						<p:column headerText="Total" style="text-align: center;"
+							sortBy="#{detalle.precioTotalConImpuesto}">
+							<h:outputText value="#{detalle.precioTotalConImpuesto}" />
+						</p:column>
+						
+						
+
+					</p:dataTable>
+				</div>
+			</p:rowExpansion>
+
+		</p:dataTable>
+
+	</ui:define>
+
+	<ui:define name="DIALOGO">
+
+	</ui:define>
+
+</ui:composition>

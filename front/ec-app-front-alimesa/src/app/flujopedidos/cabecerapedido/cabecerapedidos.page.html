@@ -1,0 +1,165 @@
+<ion-header class="osahan-nav">
+   <ion-toolbar>
+      <ion-buttons slot="start">
+         <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title>Crear Pedido
+      </ion-title>
+   </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding my-profile-page" color="light">
+
+   <div class="mb-2 card bg-white profile-box text-center">
+      <a class="list-group-item list-group-item-action active text-left">
+         <ion-icon class="mr-2" name="person-outline"></ion-icon>
+         Datos Cliente
+      </a>
+
+      <div class="py-4 px-3 border-bottom datos-cliente">
+         <p class="font-weight-bold text-dark mb-1 datos-cliente">{{item.NOMBRECOMPLETO}}</p>
+      </div>
+   
+      <ion-grid style="padding: 0px !important;">
+         <ion-row>
+            <ion-col>
+               <p class="mb-0 text-muted">Identificación: <br/> {{item.IDENTIFICACION}}</p>
+            </ion-col>
+            <ion-col>
+               <p class="mb-0 text-muted">Cupo: <br/> {{item.CUPO}}</p>
+            </ion-col>
+         </ion-row>
+         <ion-row>
+            <ion-col>
+               <p class="mb-0 text-muted">L. Precio: <br/> {{item.listaPrecio}}</p>
+            </ion-col>
+            <ion-col>
+               <p class="mb-0 text-muted">T. Pago: <br/> {{item.FORMAPAGO}}</p>
+            </ion-col>
+         </ion-row>
+      </ion-grid>  
+   
+   </div>
+
+   <form>
+      <div class="mb-2 card bg-white profile-box">
+         <a class="list-group-item list-group-item-action active text-left">
+            <ion-icon class="mr-2" name="clipboard"></ion-icon>
+            Pedido
+         </a>
+         <div class="py-4 px-3 border-bottom datos-cliente">
+
+            <ion-row style="height: 6em !important">
+               <ion-col style="padding: 0px !important;">
+                  <ion-item>
+                     <ion-label position="stacked">
+                        Fecha
+                        <ion-text color="danger">*</ion-text>
+                     </ion-label>
+                     <ion-datetime [(ngModel)]="cabOrden.FECHAEMISION" name="fechaEmision" required style="font-size: medium; height: 2.5em !important;" displayFormat="DD/MM/YYYY" *ngIf="!editarOrden"  ></ion-datetime> 
+                     <ion-datetime  [(ngModel)]="cabOrden.FECHAEMISION" name="fechaEmision" disabled required  style="font-size: medium; height: 2.5em !important;" displayFormat="DD/MM/YYYY" *ngIf="editarOrden"  ></ion-datetime>                     
+                  </ion-item>
+               </ion-col>
+               <ion-col style="padding: 0px !important;">
+                  <ion-item>
+                     <ion-label position="stacked">
+                        No. Orden
+                        <ion-text color="danger">*</ion-text>
+                     </ion-label>
+                     <ion-input value= "N/A" disabled  type="text" *ngIf="!editarOrden || cabOrden.CANALCREACION ==='MOB'" style="font-size: medium"></ion-input>
+                    
+                     <ion-input value= "{{cabOrden.NUMEROODEN}}" disabled  type="text" *ngIf="editarOrden && cabOrden.CANALCREACION !='MOB'" style="font-size: medium"></ion-input>
+                  </ion-item>
+               </ion-col>
+            </ion-row>
+
+            <ion-row style="height: 6em !important">
+               <ion-col style="padding: 0px !important;">
+                  <ion-item>
+                     <ion-label position="stacked">
+                        Subtotal
+                        <ion-text color="danger">*</ion-text>
+                     </ion-label>
+                     <ion-input  value= "{{cabOrden.TOTALSINIMPUESTOS  | currency}}" disabled type="text" style="font-size: medium"></ion-input>
+                  </ion-item>
+               </ion-col>
+               <ion-col style="padding: 0px !important;">
+                  <ion-item>
+                     <ion-label position="stacked">
+                        Dscto
+                        <ion-text color="danger">*</ion-text>
+                     </ion-label>
+                     <ion-input value= "{{cabOrden.TOTALDESCUENTO  | currency }}" disabled type="text" style="font-size: medium"></ion-input>
+                  </ion-item>
+               </ion-col>
+            </ion-row>
+
+            <ion-row style="height: 6em !important">
+               <ion-col style="padding: 0px !important;">
+                  <ion-item>
+                     <ion-label position="stacked">
+                        IVA
+                        <ion-text color="danger">*</ion-text>
+                     </ion-label>
+                     <ion-input  value= "{{cabOrden.TOTALIMPUESTO  | currency}}" disabled type="text" style="font-size: medium"></ion-input>
+                  </ion-item>
+               </ion-col>
+               <ion-col style="padding: 0px !important;">
+                  <ion-item>
+                     <ion-label position="stacked">
+                        Neto
+                        <ion-text color="danger">*</ion-text>
+                     </ion-label>
+                     <ion-input  value= "{{cabOrden.IMPORTETOTAL  | currency}}"  disabled type="text" style="font-size: medium"></ion-input>
+                  </ion-item>
+               </ion-col>
+            </ion-row>
+         </div>
+      </div>  
+
+      <div class="mb-2 card bg-white profile-box">
+         <a class="list-group-item list-group-item-action active text-left" (click)="levantarBusqueda()">
+            <ion-icon class="mr-2" name="add"></ion-icon>
+            Productos
+         </a>
+         <div class="py-4 px-3 border-bottom datos-cliente" *ngIf="detOrden?.length > 0">
+
+            <ion-list>
+               <ion-item *ngFor=" let item of detOrden ">
+                  <div class="shop-cart-right">
+                     <h6 class="font-weight-bold mb-2 price">{{item.DESCRIPCION}}</h6>
+                     <div class="mb-2" style="font-size: small" >Cod. {{item.CODIGOPRINCIPAL}}</div> 
+                     <div class="mb-2" style="font-size: small" >P.U. {{item.PRECIOUNITARIO | currency}} - Sub. T. {{item.PRECIOTOTALSINIMPUESTO | currency}}</div>                     
+                  </div>
+                  <div class="small text-gray-500 d-flex align-items-center justify-content-between">                     
+                     <div class="input-group shop-cart-value">
+                        <span class="input-group-btn"></span>
+                        <input  [(ngModel)]='item.CANTIDAD' id="{{item.CODIGOPRINCIPAL}}"
+                          (blur)='calcularDatos($event.target.value)'
+                           class="form-control border-form-control form-control-sm input-number" name="val">
+                        <span class="input-group-btn" style="margin-left: 10px"><button class="btn btn-sm" type="button" (click)='eliminar(item)' >X</button>
+                        </span>
+                     </div>
+                  </div>
+               </ion-item>
+            </ion-list>
+         </div>
+         <ion-item *ngIf="detOrden?.length < 1" >
+            <ion-label >
+                  No existen detalles de la órden
+            </ion-label>
+         </ion-item>
+      </div>
+   </form>
+</ion-content>
+<ion-footer class="border-0">
+   <button (click)='registrarOrden()' class="btn btn-primary btn-lg fix-btn btn-block text-left" type="button">
+      <span class="float-left">
+         <ion-icon name="cart-outline"></ion-icon>
+         Crear orden pedido
+      </span>
+      <span class="float-right">
+         <strong>{{cabOrden.IMPORTETOTAL  | currency}}</strong>
+         <ion-icon name="arrow-forward-outline"></ion-icon>
+      </span>
+   </button>
+</ion-footer>

@@ -1,0 +1,306 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template_formulario_mantenimiento.xhtml">
+
+
+	<ui:define name="TITULO_FORMULARIO">#{beanMantenedorOpciones.tituloPagina}</ui:define>
+
+	<ui:define name="CUERPO_FORMULARIO">
+
+		<div class="p-col-12 p-md-6">
+		<h:outputText value="Nombre Opción "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputText placeholder="Nombre Opción:"
+				value="#{beanMantenedorOpciones.entidadRegistrar.opcion}"
+				required="true" id="txtNombreOpcion"
+				requiredMessage="Debe ingresar el nombre de la opción">
+				<p:ajax event="blur" update="txtNombreOpcion, mensajes"
+					process="txtNombreOpcion"
+					listener="#{beanMantenedorOpciones.buscarOpcionCreada}" />
+			</p:inputText>
+		</div>
+		<div class="p-col-12 p-md-6">
+		<h:outputText value="Descripción "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:inputText
+				value="#{beanMantenedorOpciones.entidadRegistrar.descripcion}"
+				placeholder="Descripción" required="true"
+				requiredMessage="Debe registrar la descripción de la opción">
+				<f:ajax event="blur" execute="@this" render="mensajes"></f:ajax>
+			</p:inputText>
+		</div>
+		<div class="p-col-12 p-md-4">
+		<h:outputText value="Tipo Opción "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:selectOneMenu id="txtTipoOpcion"
+				value="#{beanMantenedorOpciones.lTipoOpcion}" required="true"
+				label="Seleccione la opcion">
+				<f:selectItem itemValue="MENU" itemLabel="MENU" />
+				<f:selectItem itemValue="SUBMENU" itemLabel="SUBMENU" />
+				<f:selectItem itemValue="OPCION" itemLabel="OPCION" />
+
+				<p:ajax event="change" update="contenedor" process="@this"
+					listener="#{beanMantenedorOpciones.presentarCamposAdicionales}" />
+
+			</p:selectOneMenu>
+		</div>
+		<div class="p-col-12 p-md-4">
+		<h:outputText value="Icono "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:selectOneMenu id="txtIconoOpcion"
+				value="#{beanMantenedorOpciones.entidadRegistrar.rutaimagen}"
+				autoWidth="false" filter="true" filterMatchMode="contains">
+				<f:selectItem noSelectionOption="true" itemValue=""
+					itemLabel="Seleccione" escapeItem="false" />
+				<f:selectItems value="#{beanMantenedorOpciones.listaIconos}"
+					var="icono" itemValue="#{icono.lIconoFontPrimefaces}"
+					itemLabel="&lt;i class='#{icono.lIconoFontPrimefaces}' &gt; #{icono.lIconoFontPrimefaces} &lt;/i&gt;"
+					itemLabelEscaped="false" itemDescription="#{icono.observacion}">
+				</f:selectItems>
+				<p:ajax event="change" process="@this" update="@this"></p:ajax>
+
+			</p:selectOneMenu>
+		</div>
+		<div class="p-col-12 p-md-4">
+		<h:outputText value="Orden "
+				style="font-size: 10px; font-weight: bold;" />
+			<p:spinner id="txtOrdenOpcion" label="Orden"
+				value="#{beanMantenedorOpciones.entidadRegistrar.orden}"
+				placeholder="Orden Opción" required="true" min="1" max="99" />
+		</div>
+		<div class="p-col-12 p-md-4">
+			<p:selectOneMenu id="txtOpcionMenu"
+				rendered="#{beanMantenedorOpciones.lCamposSubmenu}"
+				value="#{beanMantenedorOpciones.lIdOpcion}" style="width:180px;"
+				required="true" label="Seleccione el menú"
+				requiredMessage="Debe seleccionar el tipo de menú">
+				<f:selectItems value="#{beanMantenedorOpciones.lListaOpcionesPadre}"
+					var="menu" itemLabel="#{menu.opcion}" itemValue="#{menu.id}"></f:selectItems>
+			</p:selectOneMenu>
+
+		</div>
+
+		<div class="p-col-12 p-md-8">
+			<p:inputTextarea rendered="#{beanMantenedorOpciones.lCamposOpcion}"
+				rows="2" placeholder="Ruta Página"
+				value="#{beanMantenedorOpciones.entidadRegistrar.accion}"
+				required="true" id="txtAccion"
+				requiredMessage="Debe ingresar la ruta de la página">
+			</p:inputTextarea>
+
+		</div>
+
+	</ui:define>
+
+	<ui:define name="CONTROL_FORMULARIO">
+		<p:commandButton value="Registrar" style="margin-bottom:10px;"
+			id="registrar" styleClass="ui-button-rounded"
+			actionListener="#{beanMantenedorOpciones.guardarOActualizar}"
+			process="contenedor" update="@form" partialSubmit="true" />
+
+	</ui:define>
+
+
+	<ui:define name="TITULO_TABLA">
+#{beanMantenedorOpciones.cabeceraTabla}
+</ui:define>
+
+	<ui:define name="CUERPO_TABLA">
+
+		<p:dataTable value="#{beanMantenedorOpciones.lListaCompletaOpciones}"
+			var="opcion" widgetVar="tablaDatos"
+			emptyMessage="#{beanMantenedorOpciones.mensajeTablaVacia}" rows="8"
+			reflow="true" paginator="true" paginatorPosition="bottom"
+			id="tablaDatos" paginatorAlwaysVisible="false"
+			resizableColumns="true">
+
+			<p:column headerText="Ícono">
+				<span class="fa-stack fa-lg"> <i
+					class="fa fa-circle fa-stack-2x"></i> <i
+					class="#{opcion.rutaimagen} fa-stack-1x fa-inverse"
+					aria-hidden="true"></i>
+				</span>
+			</p:column>
+
+			<p:column filterBy="#{opcion.opcion}" footerText="Nombre opcion">
+				<h:outputText value="#{opcion.opcion}" />
+			</p:column>
+
+			<p:column headerText="Página">
+				<p:tooltip for="obervacionCol" value="#{opcion.accion}"
+					position="top" rendered="#{opcion.moduloPadre != null}" />
+				<p:commandLink title="#{cola.id}" id="obervacionCol"
+					rendered="#{opcion.moduloPadre != null}">
+					<span class="fa-stack fa-lg"> <i
+						class="fa fa-circle fa-stack-2x"></i> <i
+						class="fa fa-info-circle fa-2x fa-stack-1x fa-inverse"
+						aria-hidden="true"></i>
+					</span>
+				</p:commandLink>
+
+			</p:column>
+
+			<p:column headerText="Descripción">
+				<h:outputText value="#{opcion.descripcion}" />
+			</p:column>
+
+
+			<p:column footerText="Estado" filterBy="#{opcion.estado}"
+				filterMatchMode="exact">
+				<f:facet name="filter">
+					<p:selectOneMenu onchange="PF('tablaDatos').filter()">
+						<f:selectItem itemLabel="ESTADO" itemValue="#{null}"
+							noSelectionOption="true" />
+						<f:selectItem itemLabel="ACTIVO" itemValue="A" />
+						<f:selectItem itemLabel="INACTIVO" itemValue="I" />
+					</p:selectOneMenu>
+				</f:facet>
+
+				<h:outputText
+					value="#{opcion.estado eq beanMantenedorOpciones.estadoActivo?'ACTIVO':'INACTIVO'}" />
+			</p:column>
+
+
+			<p:column headerText="Opción Padre" sortable="true"
+				sortBy="#{opcion.moduloPadre.opcion}">
+				<h:outputText value="#{opcion.moduloPadre.opcion}"
+					rendered="#{opcion.moduloPadre != null}">
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Orden" sortable="true" sortBy="#{opcion.orden}">
+				<h:outputText value="#{opcion.orden}">
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Acciones">
+				<div class="p-grid ui-fluid">
+					<div class="p-col-12 p-md-6">
+						<p:commandLink title="Cambiar Estado"
+							actionListener="#{beanMantenedorOpciones.cambiarEstado}"
+							update="@form" process="@this">
+
+							<i class="fa fa-exchange Fs20 BoldGray DispBlock"> </i>
+							<f:attribute
+								name="#{beanMantenedorOpciones.nombreAtributoCambioEstado}"
+								value="#{opcion}"></f:attribute>
+
+							<p:confirm header="Confirmación"
+								message="Seguro que desea realizar esta operación?"
+								icon="ui-icon-alert" />
+						</p:commandLink>
+					</div>
+					<div class="p-col-12 p-md-6">
+						<p:commandLink title="Actualizar"
+							actionListener="#{beanMantenedorOpciones.actualizarEntidad}"
+							update="@([id$=dialogoMantenimiento])"
+							oncomplete="PF('dialogoMantenimiento').show();" process="@this">
+							<i class="fa fa-edit Fs20 BoldGray DispBlock"> </i>
+							<f:attribute
+								name="#{beanMantenedorOpciones.nombreAtributoCambioEstado}"
+								value="#{opcion}"></f:attribute>
+						</p:commandLink>
+					</div>
+
+				</div>
+
+			</p:column>
+
+		</p:dataTable>
+
+	</ui:define>
+
+
+
+	<ui:define name="cab_dialogo">
+		#{beanMantenedorOpciones.cabeceraDialogo}
+	</ui:define>
+
+	<ui:define name="datos_dialogo">
+		<div class="p-col-12 p-md-2">
+			<h:outputText value="Nombre Opción *: " />
+		</div>
+		<div class="p-col-12 p-md-4">
+			<p:inputText placeholder="Nombre Opción:"
+				value="#{beanMantenedorOpciones.entidadRegistrar.opcion}"
+				required="true" id="txtNombreOpcionDialogo"
+				requiredMessage="Debe ingresar el nombre de la opción">
+				<f:ajax event="blur" execute="@this" render="mensajeDialogo"></f:ajax>
+			</p:inputText>
+		</div>
+
+		<div class="p-col-12 p-md-2">
+			<h:outputText value="Descripción *: " />
+		</div>
+		<div class="p-col-12 p-md-4">
+			<p:inputText
+				value="#{beanMantenedorOpciones.entidadRegistrar.descripcion}"
+				placeholder="Descripción" required="true"
+				requiredMessage="Debe registrar la descripción de la opción">
+				<f:ajax event="blur" execute="@this" render="mensajeDialogo"></f:ajax>
+			</p:inputText>
+		</div>
+
+		<div class="p-col-12 p-md-2">
+			<h:outputText value="Ícono *: " />
+		</div>
+		<div class="p-col-12 p-md-4">
+			<p:selectOneMenu id="txtIconoOpcionDialogo"
+				value="#{beanMantenedorOpciones.entidadRegistrar.rutaimagen}"
+				autoWidth="false" filter="true" filterMatchMode="contains">
+				<f:selectItem noSelectionOption="true" itemValue=""
+					itemLabel="Seleccione" escapeItem="false" />
+				<f:selectItems value="#{beanMantenedorOpciones.listaIconos}"
+					var="icono" itemValue="#{icono.lIconoFontPrimefaces}"
+					itemLabel="&lt;i class='#{icono.lIconoFontPrimefaces}' &gt; #{icono.lIconoFontPrimefaces} &lt;/i&gt;"
+					itemLabelEscaped="false" itemDescription="#{icono.observacion}">
+				</f:selectItems>
+				<p:ajax event="change" process="@this" update="@this"></p:ajax>
+			</p:selectOneMenu>
+		</div>
+
+		<div class="p-col-12 p-md-2">
+			<h:outputText value="Orden *: " />
+		</div>
+		<div class="p-col-12 p-md-4">
+			<p:spinner id="txtOrdenOpcionDialogo" label="Orden"
+				value="#{beanMantenedorOpciones.entidadRegistrar.orden}"
+				placeholder="Orden Opción" required="true" min="1" max="99" />
+		</div>
+
+		<div class="p-col-12 p-md-2">
+			<h:outputText value="Página *: "
+				rendered="#{beanMantenedorOpciones.entidadRegistrar.accion != null}" />
+		</div>
+		<div class="p-col-12 p-md-10">
+			<p:inputTextarea
+				rendered="#{beanMantenedorOpciones.entidadRegistrar.accion != null}"
+				rows="2" placeholder="Ruta Página"
+				value="#{beanMantenedorOpciones.entidadRegistrar.accion}"
+				required="true" id="txtAccionDialogo"
+				requiredMessage="Debe ingresar la ruta de la página">
+			</p:inputTextarea>
+		</div>
+
+
+	</ui:define>
+
+	<ui:define name="control_formulario_dialogo">
+		<p:commandButton value="Actualizar" style="margin-bottom:10px;"
+			id="actualizar" styleClass="ui-button-rounded"
+			actionListener="#{beanMantenedorOpciones.guardarOActualizar}"
+			process="PanelActualizar"
+			update="@([id$=mensajes]), PanelActualizar, @([id$=tablaDatos])"
+			oncomplete="PF('dialogoMantenimiento').hide();" partialSubmit="true" />
+	</ui:define>
+
+	<ui:define name="control_dialogo">
+		<p:ajax event="close" update="PanelActualizar"
+			listener="#{beanMantenedorOpciones.eventoControlCierreDialogo}" />
+	</ui:define>
+
+
+</ui:composition>
