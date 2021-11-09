@@ -109,26 +109,47 @@ export class SucursalPage implements OnInit {
           dataBase => {
             console.log("Data " + JSON.stringify(dataBase));
 
-            this.insertarDatos(dataBase).then(data => {
+            //recrear tablas, las que el servidor se descarga
+            this.recrearTablas().then(res => {
+
+                this.insertarDatos(dataBase).then(data => {
 
                this.loadingService.loadingDismiss();
 
-            }).catch(e => {
-              console.error(e);
-              this.loadingService.loadingDismiss();
-              let alert = this.alertController.create({
-                header: 'Atención',
-                message: 'Error al realizar la actualización de datos',
-                buttons: [{
-                  text: 'Aceptar'
-                }
-                ]
-              }).then(res => {
+                }).catch(e => {
+                  console.error(e);
+                  this.loadingService.loadingDismiss();
+                  let alert = this.alertController.create({
+                    header: 'Atención',
+                    message: 'Error al realizar la actualización de datos',
+                    buttons: [{
+                      text: 'Aceptar'
+                    }
+                    ]
+                  }).then(res => {
 
-                res.present();
-              });
-            }
-            );
+                    res.present();
+                  });
+                }
+                );
+
+              
+            }).catch(e => {
+                  console.error(e);
+                  this.loadingService.loadingDismiss();
+                  let alert = this.alertController.create({
+                    header: 'Atención',
+                    message: 'Error al realizar preparación de las tablas locales',
+                    buttons: [{
+                      text: 'Aceptar'
+                    }
+                    ]
+                  }).then(res => {
+
+                    res.present();
+                  });
+                }
+                );
 
           },
           
@@ -154,6 +175,27 @@ export class SucursalPage implements OnInit {
 
 
   
+  recrearTablas( ) {
+
+
+    return new Promise((resolve, reject) => {
+        let sqlInsert: Array<string> = [];
+
+         sqlInsert.push('DELETE FROM '  + this.tasksService.TABLA_CABECERACOBRO) ;
+         sqlInsert.push('DELETE FROM '  + this.tasksService.TABLA_STOCK) ;
+         sqlInsert.push('DELETE FROM '  + this.tasksService.TABLA_CABDESPACHO) ;
+         sqlInsert.push('DELETE FROM '  + this.tasksService.TABLA_DETALLESDESPACHO) ;
+
+        this.tasksService.db.sqlBatch(sqlInsert)
+              .then(() => {
+                  resolve(true); 
+              });
+         
+    });
+
+  }
+
+
 
   insertarDatos( dataBase) {
 

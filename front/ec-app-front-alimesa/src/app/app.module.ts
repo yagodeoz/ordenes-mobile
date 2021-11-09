@@ -22,10 +22,12 @@ import { TasksServiceProvider } from './providers/tasks-service';
 
 import {BuscarProductosDespachoPage} from './flujodespacho/buscarproductosdespacho/buscarproductosdespacho.page';
 import {BuscarProductosDespachoPageModule} from './flujodespacho/buscarproductosdespacho/buscarproductosdespacho.module';
+import { ConfigipPage } from './configip/configip.page';
+import { ConfigipPageModule } from './configip/configip.module';
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [BuecarproductospedidoPage, BuscarProductosDespachoPage],
+  entryComponents: [BuecarproductospedidoPage, BuscarProductosDespachoPage, ConfigipPage],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -33,7 +35,8 @@ import {BuscarProductosDespachoPageModule} from './flujodespacho/buscarproductos
     AppRoutingModule,
     HttpClientModule,
     BuecarproductospedidoPageModule,
-    BuscarProductosDespachoPageModule
+    BuscarProductosDespachoPageModule,
+    ConfigipPageModule
   ],
   providers: [
     StatusBar,

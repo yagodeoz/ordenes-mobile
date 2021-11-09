@@ -10,6 +10,7 @@ export class TasksServiceProvider {
 
   //Nombres Tablas
   public TABLA_SINCRONIZACION = "SINCRONIZACION";
+  public TABLA_CONFIG = "CONFIG";
   public TABLA_USUARIO = "USUARIOS";
   public TABLA_SUCURSALES = "SUCURSALES";
   public TABLA_CLIENTES = "CLIENTES";
@@ -51,6 +52,8 @@ export class TasksServiceProvider {
   usuarioasignante character varying(255),
 
 */
+
+  public SQL_CONFIG = 'CREATE TABLE IF NOT EXISTS ' + this.TABLA_CONFIG + ' ( id INTEGER PRIMARY KEY, ipapigateway TEXT ) ';
 
   public SQL_CABDESPACHO = 'CREATE TABLE IF NOT EXISTS ' + this.TABLA_CABDESPACHO + '('
     + 'id INTEGER PRIMARY KEY, '
@@ -421,6 +424,7 @@ public SQL_COMPROBANTECOBRO = 'CREATE TABLE IF NOT EXISTS ' + this.TABLA_COMPROB
     this.crearTabla(this.TABLA_STOCK);
     this.crearTabla(this.TABLA_CABDESPACHO);
     this.crearTabla(this.TABLA_DETALLESDESPACHO);
+    this.crearTabla(this.TABLA_CONFIG);
     return true;
   }
 
@@ -491,6 +495,10 @@ public SQL_COMPROBANTECOBRO = 'CREATE TABLE IF NOT EXISTS ' + this.TABLA_COMPROB
 
     if (this.TABLA_DETALLESDESPACHO == tabla) {
       sql = this.SQL_DETALLESDESPACHO;
+    }
+
+    if (this.TABLA_CONFIG == tabla) {
+      sql = this.SQL_CONFIG;
     }
 
     console.log("sql ==> " + sql);
@@ -1360,6 +1368,22 @@ clienteRegistroFiscal(identificacion:string){
   listaCabeceraDespachoReplicada() {  
 
      let sql = "UPDATE "+this.TABLA_CABDESPACHO + " SET estadoproceso  = 'DESPACHADOREPLICADO' where estadoproceso = 'DESPACHADOLOCAL'";
+     
+     return this.db.executeSql(sql, [])
+    .then(response => {
+      let tasks = [];
+      for (let index = 0; index < response.rows.length; index++) {
+        tasks.push( response.rows.item(index) );
+      }
+      return Promise.resolve( tasks );
+    })
+    .catch(error => Promise.reject(error));  
+
+  }
+
+  ipconfiguracionapi() {  
+
+     let sql = "SELECT * FROM " + this.TABLA_CONFIG;
      
      return this.db.executeSql(sql, [])
     .then(response => {

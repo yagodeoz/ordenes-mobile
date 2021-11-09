@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from "rxjs";
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import {ControlParametrosService} from '../transversales/control-parametros.service';
 
 
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
@@ -9,7 +10,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
     providedIn: 'root'
 })
 export class ContextoService {
-    private baseUrlAPI = 'http://127.0.0.1:8080/api-gateway';
+    //private baseUrlAPI = 'http://127.0.0.1:8080/api-gateway';
 
     private servicioProducto = '/acceso/login';
 
@@ -24,7 +25,7 @@ export class ContextoService {
 
     private servicioCargaDespachoBaseDatos = "/basedatosCarga/cargadespacho";
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private controlParametros: ControlParametrosService) {
     }
 
     getServicioCargaOrdenesBaseDatos(){
@@ -40,7 +41,8 @@ export class ContextoService {
     }
 
     getContexto() {
-        return this.baseUrlAPI;
+        console.log(this.controlParametros.getParametro('ip_api'));
+        return this.controlParametros.getParametro('ip_api'); 
     }
 
     getServicio() {

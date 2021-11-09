@@ -8,6 +8,9 @@ import { TasksServiceProvider } from '../providers/tasks-service';
 import { AlertController } from '@ionic/angular';
 import { ContextoService } from '../servicios/configuracion/contexto.service';
 import { LoadingService } from '../servicios/transversales/loading.service';
+import { ConfigipPage } from '../configip/configip.page';
+import { ModalController } from '@ionic/angular';
+import {ControlParametrosService} from '../servicios/transversales/control-parametros.service';
 
 
 @Component({
@@ -31,8 +34,8 @@ export class LoginPage implements OnInit {
 
   constructor(private msg: MessagesProvider, private router: Router, private auth: AuthenticationService,
     private controlAcceso: ControlaccesologinService, private utilMensaje: UtilmensajeService,
-    private tasksService: TasksServiceProvider, public alertController: AlertController,
-    private contextoService: ContextoService, private loadingService: LoadingService) {
+    private tasksService: TasksServiceProvider, public alertController: AlertController, public viewCtrl: ModalController, 
+    private contextoService: ContextoService, private loadingService: LoadingService, private controlParametros: ControlParametrosService) {
     this.titulo = this.msg.get('titulo_login');
     this.formUsuario = this.msg.get('form_login_usuario');
     this.formClave = this.msg.get('form_login_clave');
@@ -60,95 +63,133 @@ export class LoginPage implements OnInit {
 
   login() {
 
-    if (this.validarInputs()) {
+     this.tasksService.ipconfiguracionapi().then( res => {
 
-      this.tasksService.verificaSincronizacion().then(dataSincronizacion => {
+              if (res.length > 0) {
 
-        if (dataSincronizacion.length > 0) {
+                this.controlParametros.setParametro("ip_api", res[0].ipapigateway);
 
-          this.tasksService.verificaAccesoUsuario(this.postData.username, this.postData.password).then(dataLogin => {
+              if (this.validarInputs()) {
 
-            if (dataLogin.length > 0) {
+                this.tasksService.verificaSincronizacion().then(dataSincronizacion => {
 
-              //validar la fecha de sincronizacion fecha de ultima sincronizacion vs fecha actual
-              console.log("Datos de login " + JSON.stringify(dataLogin));
-              console.log("Datos de sincronizacion " + JSON.stringify(dataSincronizacion));
+                  if (dataSincronizacion.length > 0) {
 
-              let fechaUltimaSincronizacion = new Date(dataSincronizacion[0].FECHAACTUALIZACION);
-              let fechaActual = new Date();
-              fechaActual.setHours(0, 0, 0, 0);
+                    this.tasksService.verificaAccesoUsuario(this.postData.username, this.postData.password).then(dataLogin => {
 
-              if (fechaUltimaSincronizacion < fechaActual) {
+                      if (dataLogin.length > 0) {
 
-                let alert = this.alertController.create({
-                  header: 'Atención',
-                  message: 'El Sistema necesita ser Actualizado antes de empezar su operación.',
-                  buttons: ["Aceptar"]
-                }).then(res => {
+                        //validar la fecha de sincronizacion fecha de ultima sincronizacion vs fecha actual
+                        console.log("Datos de login " + JSON.stringify(dataLogin));
+                        console.log("Datos de sincronizacion " + JSON.stringify(dataSincronizacion));
 
-                  res.present().then(data => {
+                        let fechaUltimaSincronizacion = new Date(dataSincronizacion[0].FECHAACTUALIZACION);
+                        let fechaActual = new Date();
+                        fechaActual.setHours(0, 0, 0, 0);
 
-                  });
+                        if (fechaUltimaSincronizacion < fechaActual) {
 
+                          let alert = this.alertController.create({
+                            header: 'Atención',
+                            message: 'El Sistema necesita ser Actualizado antes de empezar su operación.',
+                            buttons: ["Aceptar"]
+                          }).then(res => {
+
+                            res.present().then(data => {
+
+                            });
+
+                          });
+
+
+                        } else {
+                          this.controlAcceso.getDataLogin().username = dataLogin[0].USUARIO;
+                          this.controlAcceso.getDataLogin().nombre = dataLogin[0].NOMBRES + dataLogin[0].APELLIDOS;
+                          this.controlAcceso.getDataLogin().email = dataLogin[0].CORREO;
+                          this.controlAcceso.setPresentarMenu(true);
+                          this.auth.login('{usuario: ' + dataLogin[0].USUARIO + '}');
+                          this.router.navigateByUrl('/folder/PrincipalLogin');
+                        }
+
+
+
+                      } else {
+                        this.utilMensaje.presentarMensaje(
+                          'usuario/password incorrecto.');
+                      }
+
+                    });
+
+                  } else {
+
+                    let alert = this.alertController.create({
+                      header: 'Atención',
+                      message: 'El Sistema necesita ser Actualizado antes de empezar su operación.',
+                      buttons: [{
+                        text: 'Aceptar',
+                        handler: () => {
+                          this.validarUsuarioRemoto();
+                        }
+                      }
+                      ]
+                    }).then(res => {
+
+                      res.present();
+                    });
+                  }
                 });
 
+                /*
+                if (this.postData.username === 'ADMIN' && this.postData.password === 'ADMIN') {
+                  this.controlAcceso.getDataLogin().username = this.postData.username;
+                  this.controlAcceso.getDataLogin().nombre = 'Administrador';
+                  this.controlAcceso.getDataLogin().email = 'admin@gmail.com';
+                  this.controlAcceso.setPresentarMenu(true);
+                  this.auth.login('{usuario: "BYRON"}');
+                  this.router.navigateByUrl('/folder/PrincipalLogin');
+                } else {
+                  this.utilMensaje.presentarMensaje(
+                      'usuario/password incorrecto.'
+                  );
+                }*/
 
               } else {
-                this.controlAcceso.getDataLogin().username = dataLogin[0].USUARIO;
-                this.controlAcceso.getDataLogin().nombre = dataLogin[0].NOMBRES + dataLogin[0].APELLIDOS;
-                this.controlAcceso.getDataLogin().email = dataLogin[0].CORREO;
-                this.controlAcceso.setPresentarMenu(true);
-                this.auth.login('{usuario: ' + dataLogin[0].USUARIO + '}');
-                this.router.navigateByUrl('/folder/PrincipalLogin');
+                this.utilMensaje.presentarMensaje(
+                  'Por favor ingrese su usuario/password.'
+                );
               }
-
-
-
-            } else {
-              this.utilMensaje.presentarMensaje(
-                'usuario/password incorrecto.');
-            }
-
-          });
-
         } else {
 
-          let alert = this.alertController.create({
-            header: 'Atención',
-            message: 'El Sistema necesita ser Actualizado antes de empezar su operación.',
-            buttons: [{
-              text: 'Aceptar',
-              handler: () => {
-                this.validarUsuarioRemoto();
-              }
-            }
-            ]
-          }).then(res => {
+            let alert = this.alertController.create({
+                header: 'Atención',
+                message: 'No se encuentra registrada la url del sistema de órdenes de pedido',
+                buttons: [{
+                  text: 'Aceptar'
+                }
+                ]
+              }).then(res => {
 
-            res.present();
-          });
+                res.present();
+              });
+
         }
-      });
 
-      /*
-      if (this.postData.username === 'ADMIN' && this.postData.password === 'ADMIN') {
-        this.controlAcceso.getDataLogin().username = this.postData.username;
-        this.controlAcceso.getDataLogin().nombre = 'Administrador';
-        this.controlAcceso.getDataLogin().email = 'admin@gmail.com';
-        this.controlAcceso.setPresentarMenu(true);
-        this.auth.login('{usuario: "BYRON"}');
-        this.router.navigateByUrl('/folder/PrincipalLogin');
-      } else {
-        this.utilMensaje.presentarMensaje(
-            'usuario/password incorrecto.'
-        );
-      }*/
+     }).catch(e => {
+              console.error(e);
+              let alert = this.alertController.create({
+                header: 'Atención',
+                message: 'Error al realizar la verificacion de la url del api',
+                buttons: [{
+                  text: 'Aceptar'
+                }
+                ]
+              }).then(res => {
 
-    } else {
-      this.utilMensaje.presentarMensaje(
-        'Por favor ingrese su usuario/password.'
-      );
-    }
+                res.present();
+              });
+            }
+            );
+
   }
 
   validarUsuarioRemoto() {
@@ -176,6 +217,12 @@ export class LoginPage implements OnInit {
           dataBase => {
             console.log("Data " + JSON.stringify(dataBase));
 
+
+            //--
+
+            //recrear tablas, las que el servidor se descarga
+            this.recrearTablas().then(res => {
+
             this.insertarDatos(dataLoginRemoto, dataBase).then(data => {
 
               this.irPaginaPrincipal(dataLoginRemoto);
@@ -196,7 +243,23 @@ export class LoginPage implements OnInit {
               });
             }
             );
+            //---
+            }).catch(e => {
+                  console.error(e);
+                  this.loadingService.loadingDismiss();
+                  let alert = this.alertController.create({
+                    header: 'Atención',
+                    message: 'Error al realizar preparación de las tablas locales',
+                    buttons: [{
+                      text: 'Aceptar'
+                    }
+                    ]
+                  }).then(res => {
 
+                    res.present();
+                  });
+                }
+                );
           });
 
       } else {
@@ -675,5 +738,47 @@ export class LoginPage implements OnInit {
   }
 
 
+  recrearTablas( ) {
+    return new Promise((resolve, reject) => {
+        let sqlInsert: Array<string> = [];
 
+         sqlInsert.push('DELETE FROM '  + this.tasksService.TABLA_CABECERACOBRO) ;
+         sqlInsert.push('DELETE FROM '  + this.tasksService.TABLA_STOCK) ;
+         sqlInsert.push('DELETE FROM '  + this.tasksService.TABLA_CABDESPACHO) ;
+         sqlInsert.push('DELETE FROM '  + this.tasksService.TABLA_DETALLESDESPACHO) ;
+
+        this.tasksService.db.sqlBatch(sqlInsert)
+              .then(() => {
+                  resolve(true); 
+              });
+         
+    });
+
+  }
+
+  registrarIP() {
+
+       this.tasksService.ipconfiguracionapi().then( res => {
+            if (res.length > 0) {
+            this.controlParametros.setParametro("ip_api", res[0].ipapigateway);
+            }else {
+              this.controlParametros.setParametro("ip_api", null);
+            }
+            this.openModal();
+        });      
+  }
+
+
+  async openModal() {
+    const modal = await this.viewCtrl.create({
+      component: ConfigipPage,
+      cssClass: 'my-custom-modal-css'
+
+    });
+
+     modal.onDidDismiss().then((dataReturned) => {
+        
+    });
+    return await modal.present();
+  }
 }

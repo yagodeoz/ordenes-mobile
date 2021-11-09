@@ -1,0 +1,37 @@
+<ion-header class="osahan-nav">
+  <ion-toolbar>
+     <ion-title>Registro de URL
+     </ion-title>
+      <ion-buttons  slot="primary">
+          <ion-button (click)="regresar()">
+              <ion-icon slot="icon-only" name="close" ></ion-icon>
+          </ion-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding shop-cart-page" color="light">
+   <div class="card mb-2" style="margin-top: 50px;">
+
+   <div class="p-3">
+      <form class="card" >
+         <ion-list lines="full" class="ion-no-margin ion-no-padding">
+            <ion-item>
+               <ion-label position="stacked">
+                 Regsitro de URL del API-Gateway:
+                  <ion-text color="danger">*</ion-text>
+               </ion-label>
+               <ion-input placeholder="No existe URL configurada" required type="text" autocomplete="off" disable-cut-copy-paste [(ngModel)]="urlApiGateWay" name="ipurl"></ion-input>
+            </ion-item>
+         </ion-list>
+      </form>
+   </div>
+   <div class="p-3 border-top">
+      <ion-button (click)="registrarIp()" expand="block" type="submit" class="ion-no-margin">Registrar</ion-button>
+   </div>
+   <div class="p-3 border-top" style="text-align: justify;">
+      <ion-label style= "color: black !important">
+      Ayuda: Registre la url del sistema de órdenes de pedido (http://ip:puerto), en caso de no conocerla comuniquese con el departamento de sistemas
+   </ion-label>
+   </div>
+</div>
+</ion-content>
