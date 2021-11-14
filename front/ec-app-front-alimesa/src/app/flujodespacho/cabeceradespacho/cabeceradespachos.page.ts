@@ -9,6 +9,10 @@ import { AlertController } from '@ionic/angular';
 import { TasksServiceProvider } from '../../providers/tasks-service';
 import { LoadingService } from '../../servicios/transversales/loading.service';
 import { DOCUMENT } from '@angular/common'; 
+import { DatePipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
+import { ImprimirPage } from '../../imprimir/imprimir.page';
 
 
 
@@ -19,7 +23,7 @@ import { DOCUMENT } from '@angular/common';
 })
 export class CabeceradespachoPage implements OnInit {
 
-
+  tamanioLinea : number = 32;
   item: any;
 
   cabOrden : any;
@@ -35,7 +39,9 @@ export class CabeceradespachoPage implements OnInit {
 
   constructor(private controlParametros: ControlParametrosService, private router: Router, public viewCtrl: ModalController, 
    private controlAcceso: ControlaccesologinService, private utilMensaje: UtilmensajeService,  public alertController: AlertController, 
-   private tasksService: TasksServiceProvider,  private loadingService: LoadingService
+   private tasksService: TasksServiceProvider,  private loadingService: LoadingService,  private datePipe: DatePipe, 
+               private decimalPipe: DecimalPipe,
+               private currencyPipe:CurrencyPipe
               ) {
                 
                   var today = new Date();
@@ -102,7 +108,10 @@ export class CabeceradespachoPage implements OnInit {
           text: 'Continuar',
           handler: () => {
            this.salvarOrdenPedido().then(() => {
-              this.router.navigateByUrl('/folder/PrincipalLogin');
+            this.loadingService.loadingDismiss();
+            this.controlParametros.setParametro('irPrincipal', "S");
+             //this.router.navigateByUrl('/folder/PrincipalLogin');
+             this.imprimir(this.cabOrden);
            });
           }
         }
@@ -140,7 +149,8 @@ export class CabeceradespachoPage implements OnInit {
               sqlCabecera = sqlCabecera.replace('[CAMPOS]', "id, estado, idreferencia, campo_auditoria, fecha_actualizacion, fecha_registro, observacion, " +
                                         "direccioncomprador, estadoproceso, fechaemision, idcliente, idsucursal, idusuario, identificacioncomprador, importetotal, moneda, " +
                                         "nombrevendedor, numerofactura, numerooden, razonsocialcomprador, subtotal0, subtotal12, totaldescuento, totalimpuesto, totalsinimpuestos, canalcreacion, " +
-                                        "codigocliente, codigosucursal, diaspago, placavehiculo, usuarioasignado, usuarioasignante, descripcionlistaprecio, tipopago"
+                                        "codigocliente, codigosucursal, diaspago, placavehiculo, usuarioasignado, usuarioasignante, descripcionlistaprecio, tipopago, " + 
+                                         "codigoticket, cichofer, nombrechofer, camion, fechaaut, autorizacion, claveacceso, telefono "
                                       );
               
           let referencia = new Date().getTime();
@@ -166,7 +176,7 @@ export class CabeceradespachoPage implements OnInit {
             "\"" + this.cabOrden.numerooden + "\"," +
             "\"" + this.cabOrden.razonsocialcomprador + "\"," +
             "\"" + this.cabOrden.subtotal0 + "\"," +
-            "\"0\"," +
+            "\"" + this.cabOrden.subtotal12 + "\"," +
             "\"" + this.cabOrden.totaldescuento + "\"," +
             "\"" + this.cabOrden.totalimpuesto + "\"," +
             "\"" + this.cabOrden.totalsinimpuestos + "\"," +
@@ -178,7 +188,16 @@ export class CabeceradespachoPage implements OnInit {
             "\"" + this.cabOrden.usuarioasignado + "\"," +
             "\"" + this.cabOrden.usuarioasignante + "\"," +
             "\"" + this.cabOrden.descripcionlistaprecio + "\"," +
-            "\"" + this.cabOrden.tipopago+ "\"")); 
+            "\"" + this.cabOrden.tipopago + "\"," +
+
+            "\"" + this.cabOrden.codigoticket + "\"," +  
+            "\"" + this.cabOrden.cichofer + "\"," +  
+            "\"" + this.cabOrden.nombrechofer + "\"," +  
+            "\"" + this.cabOrden.camion + "\"," +  
+            "\"" + this.cabOrden.fechaaut + "\"," +  
+            "\"" + this.cabOrden.autorizacion + "\"," +  
+            "\"" + this.cabOrden.claveacceso + "\"," +  
+            "\"" + this.cabOrden.telefono+ "\"")); 
 
         this.tasksService.db.sqlBatch(sqlInsert)
           .then(() => {
@@ -191,9 +210,9 @@ export class CabeceradespachoPage implements OnInit {
                                           );
              
               this.detOrden.forEach(element => {
-
-              sqlInsert.push(sqlDetalle.replace('[VALORES]', 
-                "\"" + element.id + "\"," +
+              let idDet = new Date().getTime();
+              sqlInsert.push(sqlDetalle.replace('[VALORES]',                 
+                "\"" + (element.id ===null ? idDet : element.id ) + "\"," +
                 "\"" + element.estado + "\"," +
                 "\"" + referencia + "\"," +
                 "\"" + element.campo_auditoria + "\"," +
@@ -215,7 +234,7 @@ export class CabeceradespachoPage implements OnInit {
                 "\"" + element.numerofactura + "\"," +
                 "\"" + element.numerooden + "\"," +
                 "\"" + element.preciopedido + "\""));
-
+                this.esperar(1);
             });
              this.tasksService.db.sqlBatch(sqlInsert)
           .then(() => {
@@ -376,6 +395,148 @@ export class CabeceradespachoPage implements OnInit {
     this.cabOrden.totalsinimpuestos=totalSinImpuesto;
     this.cabOrden.importetotal=totalImporte;
   }
+
+  esperar(segundo) {
+    var start = new Date().getTime();
+    while (new Date().getTime() < start + segundo);
+  }
+
+
+  //---------
+
+    imprimir(item) {
+
+    
+    console.log("imprimirDespacho...."+JSON.stringify(item));    
+    var textoImprimir = "";   
+
+    //Cabecera Impresion
+    textoImprimir = textoImprimir + this.centarTexto("EXPOTUNA")+"\n\n\r";
+    textoImprimir = textoImprimir + this.centarTexto("Nota de Entrega No. " + item.numerooden)+"\n\n\r"; 
+    textoImprimir = textoImprimir + this.centarTexto(item.razonsocialcomprador)+"\n\r"; 
+    textoImprimir = textoImprimir + this.centarTexto(item.direccioncomprador)+"\n\r"; 
+    textoImprimir = textoImprimir + this.centarTexto(item.identificacioncomprador)+"\n\n\r"; 
+    textoImprimir = textoImprimir + "FECHA:        " + this.datePipe.transform(item.fechaemision,"dd-MM-yyyy")+"\n\r"; 
+    textoImprimir = textoImprimir + "CODIGO:       " + item.codigoticket + "\n\r";         
+    textoImprimir = textoImprimir + "CI/RUC CHOFER:" + item.cichofer + "\n\r"; 
+    textoImprimir = textoImprimir + "CHOFER:       " + item.nombrechofer + "\n\r"; 
+    textoImprimir = textoImprimir + "CAMION:       " + item.camion + "\n\r"; 
+    textoImprimir = textoImprimir + "PLACA:        " + item.placavehiculo + "\n\r"; 
+    textoImprimir = textoImprimir + "Fecha Aut:    " + item.fechaaut + "\n\r"; 
+    textoImprimir = textoImprimir + "Autoriza:     " + item.autorizacion + "\n\r"; 
+    textoImprimir = textoImprimir + "Clave Acc:    " + item.claveacceso + "\n\r"; 
+    textoImprimir = textoImprimir + "VENDEDOR:     " + item.nombrevendedor+"\n\r"; 
+    textoImprimir = textoImprimir + "TELEF:        " + item.telefono + "\n\r"; 
+    //Documentos Aplicados
+    textoImprimir = textoImprimir + "================================\n\r";
+    textoImprimir = textoImprimir + this.centarTexto("Descripción")+"\n\r"; 
+    textoImprimir = textoImprimir + this.completarIzquierdaDerecha("Cant.",2, 2) + this.completarIzquierdaDerecha("Precio U.", 2, 1) + this.completarIzquierdaDerecha("Total", 2, 2)+"\n\r"; 
+    textoImprimir = textoImprimir + "================================\n\r";
+
+
+    this.tasksService.listaDetalleDespacho(item).then( resultadoDetalle => { 
+            if (resultadoDetalle.length > 0) { 
+                resultadoDetalle.forEach(element => {
+                  textoImprimir = textoImprimir + this.maximoEspacio(element.descripcion) + "\n\r";
+
+                  textoImprimir = textoImprimir + this.completarIzquierdaDerecha_(this.decimalPipe.transform(element.cantidad, '1.2-2'), 10, 0) +
+                                                  this.completarIzquierdaDerecha_(this.currencyPipe.transform(element.preciounitario), 10, 0) +     
+                                                  this.completarIzquierdaDerecha_(this.currencyPipe.transform(element.preciototalsinimpuesto), 12, 0) +  "\n\r";
+                });
+
+                textoImprimir = textoImprimir + "\n\n\n\r";
+
+                textoImprimir = textoImprimir + this.completarIzquierdaDerecha_( 
+                                                    "Subtotal" + this.completarIzquierdaDerecha_(this.currencyPipe.transform(item.totalsinimpuestos), 12, 0) 
+                                                    , 32 , 0)+ "\n\r";
+                textoImprimir = textoImprimir + this.completarIzquierdaDerecha_( 
+                                                  "Tarifa 0%"+ this.completarIzquierdaDerecha_(this.currencyPipe.transform(item.totalsinimpuestos), 12, 0)
+                                                  , 32 , 0)+ "\n\r";
+                textoImprimir = textoImprimir + this.completarIzquierdaDerecha_( 
+                                                  "Tarifa 12%" + this.completarIzquierdaDerecha_(this.currencyPipe.transform(item.subtotal12), 12, 0)
+                                                  , 32 , 0)+ "\n\r";
+                textoImprimir = textoImprimir + this.completarIzquierdaDerecha_( 
+                                                  "Impuesto"+ this.completarIzquierdaDerecha_(this.currencyPipe.transform(item.totalimpuesto), 12, 0)
+                                                  , 32 , 0)+ "\n\r";
+                textoImprimir = textoImprimir + this.completarIzquierdaDerecha_( 
+                                                "Total"+ this.completarIzquierdaDerecha_(this.currencyPipe.transform(item.importetotal), 12, 0)
+                                                , 32 , 0);
+                textoImprimir = textoImprimir + "\n\n\n\r";
+
+                textoImprimir = textoImprimir + this.centarTexto("Su documento electrónico será" )+ "\n\r";
+                textoImprimir = textoImprimir + this.centarTexto("enviado a su correo electrónico")+ "\n\r";
+
+                textoImprimir = textoImprimir + "\n\r";
+                
+                textoImprimir = textoImprimir + "\n\n\n\n\n________________________________\n\r";
+                textoImprimir = textoImprimir + this.centarTexto("Cliente")+"\n\r"; 
+                this.controlParametros.setParametro('despacho_imp', textoImprimir);  
+
+                this.openModalPrint();
+              }else {
+                  this.utilMensaje.presentarMensaje('No existen detalles para el despacho : ' + item.numerooden );  
+              }
+        });
+    }
+
+    async openModalPrint() {
+    const modal = await this.viewCtrl.create({
+      component: ImprimirPage,
+      cssClass: 'my-custom-modal-css'
+
+    });
+     modal.onDidDismiss().then((dataReturned) => {
+          this.router.navigateByUrl('/folder/PrincipalLogin');
+    });
+    return await modal.present();
+  }
+
+  centarTexto (frase: String) {
+    if (!frase)
+      frase = "";
+    let tamanioCadena = frase.length;
+    let caracteresSobrantes = this.tamanioLinea - tamanioCadena;
+    let caracteresIzquierda = caracteresSobrantes / 2;
+    
+    console.log ("Caracteres a la izquiierda " + caracteresIzquierda ); 
+
+    return frase.padStart(caracteresIzquierda + tamanioCadena);
+    /*
+    str.padStart(targetLength [, padString])
+    str.padEnd(targetLength [, padString])
+    */
+  }
+
+  completarIzquierdaDerecha (frase: String, izquierda : number, derecha: number ) {
+    let fraseIzuierda = frase.padStart(frase.length + izquierda);
+    return fraseIzuierda.padEnd(frase.length + izquierda + derecha)
+  }
+
+  completarIzquierdaDerecha_ (frase: String, izquierda : number, derecha: number ) {
+    let fraseIzuierda = frase.padStart(izquierda);
+    return fraseIzuierda.padEnd(derecha)
+  }
+
+  textoMitad(frase: String, posicion: String){
+    if (posicion === 'D')
+      return frase.padStart( this.tamanioLinea/2);
+
+    if (posicion === 'I')  
+      return frase.padEnd(this.tamanioLinea/2)
+  }
+
+  maximoEspacio(frase: String) {
+
+    if (frase.length > 32) {
+      return frase.substring(0, 32);
+    }
+
+    return frase;
+
+  }
+
+
+
 
 }
 

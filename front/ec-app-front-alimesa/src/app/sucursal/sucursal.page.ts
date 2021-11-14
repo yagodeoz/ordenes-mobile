@@ -526,7 +526,8 @@ export class SucursalPage implements OnInit {
                                       sqlProductos = sqlProductos.replace('[CAMPOS]', "id, estado, idreferencia, campo_auditoria, fecha_actualizacion, fecha_registro, observacion, " +
                                         "direccioncomprador, estadoproceso, fechaemision, idcliente, idsucursal, idusuario, identificacioncomprador, importetotal, moneda, " +
                                         "nombrevendedor, numerofactura, numerooden, razonsocialcomprador, subtotal0, subtotal12, totaldescuento, totalimpuesto, totalsinimpuestos, canalcreacion, " +
-                                        "codigocliente, codigosucursal, diaspago, placavehiculo, usuarioasignado, usuarioasignante, descripcionlistaprecio, tipopago"
+                                        "codigocliente, codigosucursal, diaspago, placavehiculo, usuarioasignado, usuarioasignante, descripcionlistaprecio, tipopago, " +
+                                        "codigoticket, cichofer, nombrechofer, camion, fechaaut, autorizacion, claveacceso, telefono "
                                       );
                                       
                                       let arregloProducto = dataBase.listaDespacho;
@@ -556,7 +557,7 @@ export class SucursalPage implements OnInit {
                                         "\"" + element.numeroOden + "\"," +
                                         "\"" + element.razonSocialComprador + "\"," +
                                         "\"" + element.subTotal0 + "\"," +
-                                        "\"" + element.subTotal2 + "\"," +
+                                        "\"" + element.subTotal12 + "\"," +
                                         "\"" + element.totalDescuento + "\"," +
                                         "\"" + element.totalImpuesto + "\"," +
                                         "\"" + element.totalSinImpuestos + "\"," +
@@ -569,7 +570,15 @@ export class SucursalPage implements OnInit {
                                         "\"" + element.usuarioAsignado + "\"," +
                                         "\"" + element.usuarioAsignante + "\"," +
                                         "\"" + element.descripcionListaPrecio + "\"," +
-                                        "\"" + element.tipoPago + "\""));
+                                        "\"" + element.tipoPago + "\"," +
+                                        "\"" + element.codigoTicket + "\"," +
+                                        "\"" + element.ciChofer + "\"," +
+                                        "\"" + element.nombreChofer + "\"," +
+                                        "\"" + element.camion + "\"," +
+                                        "\"" + element.fechaAut + "\"," +
+                                        "\"" + element.autorizacion + "\"," +
+                                        "\"" + element.claveAcceso + "\"," +                                        
+                                        "\"" + element.telefono + "\""));
                                       });
                                       
                                       this.tasksService.db.sqlBatch(sqlInsert)
@@ -879,7 +888,9 @@ export class SucursalPage implements OnInit {
     return new Promise((resolve, reject) => {
        
        this.tasksService.listaCabeceraCobroReplicada().then(res => {
+         this.tasksService.listaDetCobroReplicada().then(res => {
           resolve(true);
+          });
        });       
     });
 

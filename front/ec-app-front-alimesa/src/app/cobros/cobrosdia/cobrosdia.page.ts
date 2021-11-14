@@ -7,6 +7,7 @@ import {ClientesService} from '../../servicios/ventas/clientes/clientes.service'
 import { TasksServiceProvider } from '../../providers/tasks-service';
 import { AlertController } from '@ionic/angular';
 
+
 @Component({
   selector: 'app-cobrosdia',
   templateUrl: './cobrosdia.page.html',
@@ -19,7 +20,7 @@ export class CobrosdiaPage implements OnInit {
   detallesPago : any;
 
   constructor(private loadingService: LoadingService, private servicioCliente: ClientesService,
-              private utilMensaje: UtilmensajeService, private router: Router,
+              private utilMensaje: UtilmensajeService, private router: Router,              
               private controlParametros: ControlParametrosService, private tasksService: TasksServiceProvider, public alertController: AlertController) {
 
                }

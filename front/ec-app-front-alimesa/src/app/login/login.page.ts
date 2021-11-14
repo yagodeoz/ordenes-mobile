@@ -96,7 +96,7 @@ export class LoginPage implements OnInit {
                           }).then(res => {
 
                             res.present().then(data => {
-
+                              
                             });
 
                           });
@@ -201,12 +201,12 @@ export class LoginPage implements OnInit {
     };
 
 
+    this.loadingService.loadingPresent('Autenticandose con el servidor, esta operación puede tardar unos minutos...');
+
     this.contextoService.invocacionServicioPost(postData, this.contextoService.getServicioLogin()).subscribe(dataLoginRemoto => {
       if (dataLoginRemoto.usuario) {
         console.log("Data " + JSON.stringify(dataLoginRemoto));
         //this.loadingService.loadingDismiss();
-
-        this.loadingService.loadingPresent('Autenticación exitosa, descargando información');
         //llamar la descarga de datos 
 
         let postData = {
@@ -268,7 +268,8 @@ export class LoginPage implements OnInit {
           'usuario/password incorrecto.');
       }
     }, error => {
-     
+
+        this.loadingService.loadingDismiss();  
         let alert = this.alertController.create({
             header: 'Error',
             message: 'No tiene conexón con el servidor, por favor asegurese que está conectado a internet',
@@ -617,9 +618,12 @@ export class LoginPage implements OnInit {
                                       sqlProductos = sqlProductos.replace('[CAMPOS]', "id, estado, idreferencia, campo_auditoria, fecha_actualizacion, fecha_registro, observacion, " +
                                         "direccioncomprador, estadoproceso, fechaemision, idcliente, idsucursal, idusuario, identificacioncomprador, importetotal, moneda, " +
                                         "nombrevendedor, numerofactura, numerooden, razonsocialcomprador, subtotal0, subtotal12, totaldescuento, totalimpuesto, totalsinimpuestos, canalcreacion, " +
-                                        "codigocliente, codigosucursal, diaspago, placavehiculo, usuarioasignado, usuarioasignante, descripcionlistaprecio, tipopago"
+                                        "codigocliente, codigosucursal, diaspago, placavehiculo, usuarioasignado, usuarioasignante, descripcionlistaprecio, tipopago, "+
+                                        "codigoticket, cichofer, nombrechofer, camion, fechaaut, autorizacion, claveacceso, telefono "
                                       );
                                       
+                                      
+
                                       let arregloProducto = dataBase.listaDespacho;
                                       
                                        arregloProducto.forEach(element => {
@@ -647,7 +651,7 @@ export class LoginPage implements OnInit {
                                         "\"" + element.numeroOden + "\"," +
                                         "\"" + element.razonSocialComprador + "\"," +
                                         "\"" + element.subTotal0 + "\"," +
-                                        "\"" + element.subTotal2 + "\"," +
+                                        "\"" + element.subTotal12 + "\"," +
                                         "\"" + element.totalDescuento + "\"," +
                                         "\"" + element.totalImpuesto + "\"," +
                                         "\"" + element.totalSinImpuestos + "\"," +
@@ -660,7 +664,15 @@ export class LoginPage implements OnInit {
                                         "\"" + element.usuarioAsignado + "\"," +
                                         "\"" + element.usuarioAsignante + "\"," +
                                         "\"" + element.descripcionListaPrecio + "\"," +
-                                        "\"" + element.tipoPago + "\""));
+                                        "\"" + element.tipoPago + "\"," +
+                                        "\"" + element.codigoTicket + "\"," +
+                                        "\"" + element.ciChofer + "\"," +
+                                        "\"" + element.nombreChofer + "\"," +
+                                        "\"" + element.camion + "\"," +
+                                        "\"" + element.fechaAut + "\"," +
+                                        "\"" + element.autorizacion + "\"," +
+                                        "\"" + element.claveAcceso + "\"," +                                        
+                                        "\"" + element.telefono + "\""));
                                       });
                                       
                                       this.tasksService.db.sqlBatch(sqlInsert)

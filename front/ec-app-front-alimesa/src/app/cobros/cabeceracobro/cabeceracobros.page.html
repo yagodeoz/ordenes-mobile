@@ -76,12 +76,12 @@
                <ion-item *ngFor=" let regPago of listaRegistroPago "> 
                   <div class="shop-cart-right">  
                      <h4 class="font-weight-bold mb-2 price">[FACT] - {{regPago.cobro.numerofactura}}   </h4>
-                      <p class="mb-0 text-white font-weight-bold" >Saldo: {{regPago.cobro.saldo | currency}}</p>
+                      <p class="mb-0 text-danger font-weight-bold" >Saldo: {{regPago.cobro.saldo | currency}}</p>
                       <p class="mb-0 text-danger font-weight-bold" >Pagos: {{regPago.cobro.pagosrealizados | currency}}</p>
-                      <p class="mb-0 text-white " >Documento: {{regPago.cobro.numerodocumento}} Monto: {{regPago.cobro.monto  | currency}}</p>
-                      <p class="mb-0 text-white " >Emisión: {{regPago.cobro.fechaemision}}</p>
-                      <p class="mb-0 text-white " >Vencimiento: {{regPago.cobro.fechavencimiento}}</p>
-                      <p class="mb-0 text-white " >Días Vencido: {{regPago.cobro.diasvencido}} Res. Cheque: {{regPago.cobro.redcheque | currency}}</p>
+                      <p class="mb-2" style="font-size: small" >Documento: {{regPago.cobro.numerodocumento}} Monto: {{regPago.cobro.monto  | currency}}</p>
+                      <p class="mb-2" style="font-size: small" >Emisión: {{regPago.cobro.fechaemision}}</p>
+                      <p class="mb-2" style="font-size: small" >Vencimiento: {{regPago.cobro.fechavencimiento}}</p>
+                      <p class="mb-2" style="font-size: small" >Días Vencido: {{regPago.cobro.diasvencido}} Res. Cheque: {{regPago.cobro.redcheque | currency}}</p>
                   </div>
                    <ion-label position="stacked" *ngIf="regPago.cobrar">
                        Valor a Cancelar

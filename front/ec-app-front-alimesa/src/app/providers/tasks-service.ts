@@ -89,7 +89,16 @@ export class TasksServiceProvider {
     + 'usuarioasignado TEXT,'
     + 'usuarioasignante TEXT,'
     + 'descripcionlistaprecio TEXT,'
-    + 'tipopago TEXT)';
+    + 'tipopago TEXT,'
+    + 'codigoticket TEXT,'
+    + 'cichofer TEXT,'
+    + 'nombrechofer TEXT,'
+    + 'camion TEXT,'    
+    + 'fechaaut TEXT,'
+    + 'autorizacion TEXT,'
+    + 'claveacceso TEXT,'
+    + 'telefono TEXT)';
+
 
     public SQL_DETALLESDESPACHO = 'CREATE TABLE IF NOT EXISTS ' + this.TABLA_DETALLESDESPACHO + '('
     + 'id INTEGER PRIMARY KEY, '
@@ -894,7 +903,7 @@ clienteRegistroFiscal(identificacion:string){
     let sql = "SELECT b.*, "
      + " IFNULL( ( select sum ( a.valorpago ) from " 
      +   this.TABLA_DETALLECOBRO 
-     + " a where a.numerodocumento = b.numerodocumento and a.numerofactura = b.numerofactura) ,  0  )  pagosrealizados " 
+     + " a where a.numerodocumento = b.numerodocumento and a.numerofactura = b.numerofactura and a.estado = 'A') ,  0  )  pagosrealizados " 
      + " FROM " 
      + this.TABLA_CABECERACOBRO  
      + " b WHERE  b.codigocliente =  '"+ cliente.CODCLIENTE +"'" ;
@@ -1317,6 +1326,22 @@ clienteRegistroFiscal(identificacion:string){
   listaCabeceraCobroReplicada() {
 
      let sql = "UPDATE "+this.TABLA_COMPROBANTECOBRO + " SET estado = 'R' where estado = 'C'";
+     
+     return this.db.executeSql(sql, [])
+    .then(response => {
+      let tasks = [];
+      for (let index = 0; index < response.rows.length; index++) {
+        tasks.push( response.rows.item(index) );
+      }
+      return Promise.resolve( tasks );
+    })
+    .catch(error => Promise.reject(error));
+
+  }
+
+  listaDetCobroReplicada() {
+
+     let sql = "UPDATE "+this.TABLA_DETALLECOBRO + " SET estado = 'R' where estado = 'A'";
      
      return this.db.executeSql(sql, [])
     .then(response => {

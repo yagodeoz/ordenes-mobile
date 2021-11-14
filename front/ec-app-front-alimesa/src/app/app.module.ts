@@ -19,15 +19,25 @@ import {BuecarproductospedidoPageModule} from './flujopedidos/buecarproductosped
 import { SQLite } from '@ionic-native/sqlite/ngx';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { TasksServiceProvider } from './providers/tasks-service';
+import { PrintProvider } from './providers/print-service';
 
 import {BuscarProductosDespachoPage} from './flujodespacho/buscarproductosdespacho/buscarproductosdespacho.page';
 import {BuscarProductosDespachoPageModule} from './flujodespacho/buscarproductosdespacho/buscarproductosdespacho.module';
 import { ConfigipPage } from './configip/configip.page';
 import { ConfigipPageModule } from './configip/configip.module';
 
+import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
+
+import { ImprimirPage } from './imprimir/imprimir.page';
+import { ImprimirPageModule } from './imprimir/imprimir.module';
+
+import { DatePipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
+
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [BuecarproductospedidoPage, BuscarProductosDespachoPage, ConfigipPage],
+  entryComponents: [BuecarproductospedidoPage, BuscarProductosDespachoPage, ConfigipPage, ImprimirPage],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -36,22 +46,28 @@ import { ConfigipPageModule } from './configip/configip.module';
     HttpClientModule,
     BuecarproductospedidoPageModule,
     BuscarProductosDespachoPageModule,
-    ConfigipPageModule
+    ConfigipPageModule,
+    ImprimirPageModule
   ],
   providers: [
+    DatePipe,
+    DecimalPipe,
+    CurrencyPipe,
     StatusBar,
     SplashScreen,
     MessagesProvider,
     AuthGuardService,
     AuthenticationService,
     TasksServiceProvider,
+    PrintProvider,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     SQLite,
       SQLitePorter,
       { 
         provide: RouteReuseStrategy, 
         useClass: IonicRouteStrategy 
-      }     
+      },
+    BluetoothSerial,      
   ],
   bootstrap: [AppComponent]
 })

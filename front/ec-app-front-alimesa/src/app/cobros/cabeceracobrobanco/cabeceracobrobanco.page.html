@@ -144,7 +144,7 @@
                 <ion-item *ngFor=" let regPago of listaRegistroPago "> 
                     <div class="shop-cart-right">  
                        <h4 class="font-weight-bold mb-2 price">[FACT] - {{regPago.cobro.numerofactura}}   </h4>
-                        <p class="mb-0 text-white font-weight-bold" >Saldo: {{regPago.cobro.saldo | currency}}</p>
+                        <p class="mb-0 text-danger font-weight-bold" >Saldo: {{regPago.cobro.saldo | currency}}</p>
                         <p class="mb-0 text-danger font-weight-bold" >Pagos: {{regPago.cobro.pagosrealizados | currency}}</p>
                         <p class="mb-0 text-white " >Documento: {{regPago.cobro.numerodocumento}} Monto: {{regPago.cobro.monto  | currency}}</p>
                         <p class="mb-0 text-white " >Emisión: {{regPago.cobro.fechaemision}}</p>

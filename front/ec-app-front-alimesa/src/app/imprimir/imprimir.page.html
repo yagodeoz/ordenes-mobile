@@ -1,0 +1,25 @@
+<ion-header class="osahan-nav">
+  <ion-toolbar>
+     <ion-title>Previzualización de Documentos
+     </ion-title>
+      <ion-buttons  slot="primary">
+          <ion-button (click)="regresar()">
+              <ion-icon slot="icon-only" name="close" ></ion-icon>
+          </ion-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding order-list-page" color="light">
+  <ion-item>
+    <ion-button (click)="enviarImprimir()" expand="block" class="ion-no-margin danger">Imprimir Documento</ion-button>
+  </ion-item>    
+    <ion-item>
+      <ion-textarea rows="1000" class="small" [(ngModel)]="imprimirHTML" disabled
+      ></ion-textarea>
+    </ion-item>    
+
+    
+
+</ion-content>
+

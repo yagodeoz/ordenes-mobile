@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -57,8 +56,16 @@ public class CabDespacho extends EntidadBaseAuditable<Long> implements Serializa
 	private String usuarioAsignante;
 	private String descripcionListaPrecio;
 	private String tipoPago;
+	private String codigoTicket;
+	private String ciChofer;
+	private String nombreChofer;
+	private String camion;
 	
-
+	private String fechaAut;
+	private String autorizacion;
+	private String claveAcceso;
+	private String telefono;
+	
 	private List<DetalleDespacho> listaDetallesDespacho;
 
 	@GeneratedValue(generator = "cabDespacho", strategy = GenerationType.SEQUENCE)
@@ -295,8 +302,72 @@ public class CabDespacho extends EntidadBaseAuditable<Long> implements Serializa
 	public void setTipoPago(String tipoPago) {
 		this.tipoPago = tipoPago;
 	}
+
+	public String getCodigoTicket() {
+		return codigoTicket;
+	}
+
+	public void setCodigoTicket(String codigoTicket) {
+		this.codigoTicket = codigoTicket;
+	}
+
+	public String getCiChofer() {
+		return ciChofer;
+	}
+
+	public void setCiChofer(String ciChofer) {
+		this.ciChofer = ciChofer;
+	}
+
+	public String getNombreChofer() {
+		return nombreChofer;
+	}
+
+	public void setNombreChofer(String nombreChofer) {
+		this.nombreChofer = nombreChofer;
+	}
+
+	public String getCamion() {
+		return camion;
+	}
+
+	public void setCamion(String camion) {
+		this.camion = camion;
+	}
+
 	
-	
+
+	public String getFechaAut() {
+		return fechaAut;
+	}
+
+	public void setFechaAut(String fechaAut) {
+		this.fechaAut = fechaAut;
+	}
+
+	public String getAutorizacion() {
+		return autorizacion;
+	}
+
+	public void setAutorizacion(String autorizacion) {
+		this.autorizacion = autorizacion;
+	}
+
+	public String getClaveAcceso() {
+		return claveAcceso;
+	}
+
+	public void setClaveAcceso(String claveAcceso) {
+		this.claveAcceso = claveAcceso;
+	}
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
 
 }
 
