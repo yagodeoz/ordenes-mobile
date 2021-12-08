@@ -5,6 +5,7 @@ import { throwError } from 'rxjs';
 import {ControlParametrosService} from '../transversales/control-parametros.service';
 
 
+
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 @Injectable({
     providedIn: 'root'

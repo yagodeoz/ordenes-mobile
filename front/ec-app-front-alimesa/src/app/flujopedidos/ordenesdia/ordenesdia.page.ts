@@ -116,10 +116,32 @@ export class OrdenesdiaPage implements OnInit {
            this.tasksService.listaOrdenesDia().then(res => {
                    this.listaOrdenes = res;
                    this.loadingService.loadingDismiss();
+                    this.finalizar ();
                   });
       });
     });
  }
+
+
+ finalizar () {
+
+      this.alertController.create({
+      header: 'Información',
+      subHeader: 'Eliminación de órden de pedido, realizado correctamente',
+      buttons: [
+        {
+          text: 'Finalizar',
+          handler: () => {
+              console.log("Listo");
+          }
+        }
+        
+      ]
+    }).then(res => {
+      res.present();
+    });     
+
+  }
 
  procesarOrden(item) {
     

@@ -132,7 +132,9 @@ export class CabecerapedidosPage implements OnInit {
           text: 'Continuar',
           handler: () => {
            this.salvarOrdenPedido(this.cabOrden).then(() => {
-              this.router.navigateByUrl('/folder/PrincipalLogin');
+                if (this.loadingService.existeEspiner())    
+                  this.loadingService.loadingDismiss();
+                this.finalizar ();           
            });
           }
         }
@@ -144,7 +146,25 @@ export class CabecerapedidosPage implements OnInit {
 
   }
   
-  
+  finalizar () {
+
+      this.alertController.create({
+      header: 'Información',
+      subHeader: 'Órden de pedido, Creado correctamente',
+      buttons: [
+        {
+          text: 'Finalizar',
+          handler: () => {
+              this.router.navigateByUrl('/ordendia');
+          }
+        }
+        
+      ]
+    }).then(res => {
+      res.present();
+    });     
+
+  }
 
   salvarOrdenPedido(element){
 

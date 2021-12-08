@@ -167,7 +167,10 @@ export class CabeceracobrosPage implements OnInit {
           text: 'Continuar',
           handler: () => {
               this.salvarPago().then(() => {
-              this.router.navigateByUrl('/folder/PrincipalLogin');
+
+                 if (this.loadingService.existeEspiner())    
+                  this.loadingService.loadingDismiss();
+              this.finalizar ();
            });
           }
         }
@@ -178,6 +181,27 @@ export class CabeceracobrosPage implements OnInit {
     });
 
   }
+
+  finalizar () {
+
+      this.alertController.create({
+      header: 'Información',
+      subHeader: 'El pago se realizó correctamente',
+      buttons: [
+        {
+          text: 'Finalizar',
+          handler: () => {
+              this.router.navigateByUrl('/cobrosdia');
+          }
+        }
+        
+      ]
+    }).then(res => {
+      res.present();
+    });     
+
+  }
+
 
    salvarPago(){
 

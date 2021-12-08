@@ -3,6 +3,7 @@ import {BehaviorSubject} from 'rxjs';
 import {Router} from '@angular/router';
 import {Platform} from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+import { ControlaccesologinService } from './login/controlaccesologin.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -13,7 +14,8 @@ export class AuthenticationService {
   constructor(
               private router: Router,
               private storage: Storage,
-              private platform: Platform
+              private platform: Platform,
+              private controlAcceso: ControlaccesologinService
   ) {
     this.platform.ready().then(() => {
       this.ifLoggedIn();
@@ -24,6 +26,11 @@ export class AuthenticationService {
     this.storage.get('USER_INFO').then((response) => {
       if (response) {
         this.presentarMenu = true;
+
+        this.controlAcceso.getDataLogin().username  = response.usuario;
+        this.controlAcceso.getDataLogin().nombre =  response.nombre;
+        this.controlAcceso.getDataLogin().email =  response.email;
+
         this.authState.next(true);
       }
     });

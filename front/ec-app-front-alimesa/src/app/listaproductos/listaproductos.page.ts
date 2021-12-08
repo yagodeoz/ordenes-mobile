@@ -92,9 +92,27 @@ export class ListaproductosPage implements OnInit {
 
 
   procesarProducto(item) {
-    console.log(item);
-    this.controlParametros.setParametro('prod_item', item);
-    this.router.navigate(['/producto']);
+    this.loadingService.loadingPresent('Por favor espere');
+    this.taskService.productoLikeNombre(item.NOMBRE).then(data => {
+
+        this.loadingService.loadingDismiss();
+        console.log(item);
+        let productos = data;
+
+        if (productos.length < 1) {
+            this.utilMensaje.presentarMensaje('No se encontraron productos registrados');          
+        }else {
+           this.controlParametros.setParametro('prod_item', productos[0]);
+          this.router.navigate(['/producto']); 
+        }
+
+      }, error => {
+      this.error = JSON.stringify(error);
+      this.listaProductos = null;
+      console.log('Error al realizar la consulta ');
+      this.loadingService.loadingDismiss();
+      this.utilMensaje.presentarMensaje('Error al realizar la consulta de productos');
+    });    
   }
 
 }

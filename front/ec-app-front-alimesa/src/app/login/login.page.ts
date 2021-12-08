@@ -107,7 +107,9 @@ export class LoginPage implements OnInit {
                           this.controlAcceso.getDataLogin().nombre = dataLogin[0].NOMBRES + dataLogin[0].APELLIDOS;
                           this.controlAcceso.getDataLogin().email = dataLogin[0].CORREO;
                           this.controlAcceso.setPresentarMenu(true);
-                          this.auth.login('{usuario: ' + dataLogin[0].USUARIO + '}');
+                          this.auth.login('{usuario: ' + this.controlAcceso.getDataLogin().username 
+                                        + ', nombre: ' + this.controlAcceso.getDataLogin().nombre 
+                                         +', email: '  + this.controlAcceso.getDataLogin().email + '}');
                           this.router.navigateByUrl('/folder/PrincipalLogin');
                         }
 

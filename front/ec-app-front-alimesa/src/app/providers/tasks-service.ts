@@ -1422,4 +1422,27 @@ clienteRegistroFiscal(identificacion:string){
 
   }
 
+  productoLikeNombre(patronNombre:string){
+
+    let sql = "SELECT a.*, " 
+              + "( select LTIPOPRODUCTO from " + this.TABLA_CATEGORIAPRODUCTO + " where ID = a.ID_CATEGORIA  ) categoria, " 
+              + " IFNULL( ( select saldo from " + this.TABLA_STOCK + " where codigoproducto = a.CODIGOPRODUCTO  ), 0 ) saldo " 
+              + " FROM "
+              + this.TABLA_PRODUCTOS + " a "              
+              + " WHERE a.NOMBRE LIKE  '%" 
+              + patronNombre.toUpperCase() +"%'" ;   
+    console.log("sql ==> "+sql);
+    return this.db.executeSql(sql, [])
+    .then(response => {
+      let tasks = [];
+      for (let index = 0; index < response.rows.length; index++) {
+        tasks.push( response.rows.item(index) );
+      }
+      return Promise.resolve( tasks );
+    })
+    .catch(error => Promise.reject(error));
+  }
+
+
+
 }

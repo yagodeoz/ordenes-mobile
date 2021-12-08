@@ -27,12 +27,12 @@ export class MessagesProvider {
             titulo_menu_clientes: 'Clientes',
             titulo_menu_pedidos: 'Pedidos',
             titulo_menu_sucursal: 'Sincronización',
-            titulo_menu_flujo_despacho: 'Flujo Despacho',
-            titulo_menu_orden_dia: 'Consulta Ordenes',
+            titulo_menu_flujo_despacho: 'Despachos Asignados',
+            titulo_menu_orden_dia: 'Consulta Pedidos',
             titulo_menu_cobros: 'Cobros',
             titulo_menu_cobros_dia: 'Consulta Cobros',
             titulo_menu_stock: 'Stock',
-            titulo_menu_despachodia: 'Despacho Dia',
+            titulo_menu_despachodia: 'Despachos Facturados',
         };
     }
 

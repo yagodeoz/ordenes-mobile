@@ -486,10 +486,34 @@ export class CabeceradespachoPage implements OnInit {
 
     });
      modal.onDidDismiss().then((dataReturned) => {
-          this.router.navigateByUrl('/folder/PrincipalLogin');
+           if (this.loadingService.existeEspiner())    
+                  this.loadingService.loadingDismiss();
+            this.finalizar ();
     });
     return await modal.present();
   }
+
+  finalizar () {
+
+      this.alertController.create({
+      header: 'Información',
+      subHeader: 'El despacho se realizó correctamente',
+      buttons: [
+        {
+          text: 'Finalizar',
+          handler: () => {
+              this.router.navigateByUrl('/despachodia');
+          }
+        }
+        
+      ]
+    }).then(res => {
+      res.present();
+    });     
+
+  }
+
+
 
   centarTexto (frase: String) {
     if (!frase)

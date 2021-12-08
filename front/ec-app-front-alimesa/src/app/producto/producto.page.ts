@@ -21,5 +21,14 @@ export class ProductoPage implements OnInit {
   procesarOrden(){
     alert('En construcción por falta de definción');
   }
+  
+
+  getDetallesAdicionales (detalle) {
+
+    if (!detalle || detalle == null || detalle === "null" )
+      return "No existen detalles adicionales del producto";
+    else
+      return detalle;
+  }
 
 }
